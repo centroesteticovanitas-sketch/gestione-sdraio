@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1">
+
+<title>Amurusu Residence - Gestione Sdraio</title>
+
+<link
+    rel="stylesheet"
+    href="css/style.css">
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+
+        <img
+            src="img/logo.png"
+            alt="Logo">
+
+        <div>
+
+            <h1>Amurusu Residence</h1>
+
+            <p>Gestione Sdraio</p>
+
+        </div>
+
+    </div>
+
+    <div class="azioni">
+
+        <input
+            type="date"
+            id="data">
+
+        <div id="barraStato">
+
+            <label class="check">
+
+                <input
+                    type="checkbox"
+                    id="chkTariffaAuto"
+                    checked>
+
+                Tariffa automatica
+
+            </label>
+
+            <span id="libere">
+
+                🟢 Libere: 40
+
+            </span>
+
+            <span id="occupate">
+
+                🔴 Occupate: 0
+
+            </span>
+
+        </div>
+
+        <button id="btnPrenota">
+
+            ➕ Prenotazione
+
+        </button>
+
+    </div>
+
+</header>
+
+<main>
+
+    <div id="mappa">
+
+        <img
+            id="planimetria"
+            src="img/planimetria.svg"
+            alt="Planimetria"
+            loading="eager"
+            draggable="false">
+
+        <div
+            id="layerSdraie"
+            aria-hidden="true">
+
+        </div>
+
+    </div>
+
+</main>
+
+<footer
+    id="scheda"
+    class="scheda">
+
+    Tocca una sdraia...
+
+</footer>
+
+<!-- ==========================================================
+     MODAL PRENOTAZIONE
+=========================================================== -->
+
+<div
+    id="modalPrenotazione"
+    class="modal hidden"
+    role="dialog"
+    aria-modal="true">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2>🏖 Nuova Prenotazione</h2>
+
+            <button
+                id="btnChiudiModal"
+                type="button"
+                class="btn-close">
+
+                &times;
+
+            </button>
+
+        </div>
+
+        <label for="txtCognome">
+
+            Cognome
+
+        </label>
+
+        <input
+            id="txtCognome"
+            type="text"
+            placeholder="Es. Rossi"
+            autocomplete="family-name"
+            autocapitalize="words"
+            enterkeyhint="next">
+
+        <div
+            id="errCognome"
+            class="errore">
+
+        </div>
+
+        <label for="txtTelefono">
+
+            Telefono
+
+        </label>
+
+        <input
+            id="txtTelefono"
+            type="tel"
+            inputmode="tel"
+            autocomplete="tel"
+            enterkeyhint="next"
+            placeholder="Es. +39 333 1234567">
+
+        <div
+            id="errTelefono"
+            class="errore">
+
+        </div>
+
+        <div class="riga">
+
+            <div class="campo">
+
+                <label for="txtNumero">
+
+                    Sdraie
+
+                </label>
+
+                <input
+                    id="txtNumero"
+                    type="number"
+                    value="2"
+                    min="1"
+                    max="25"
+                    inputmode="numeric">
+
+                <div
+                    id="errNumero"
+                    class="errore">
+
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="txtData">
+
+                    Data
+
+                </label>
+
+                <input
+                    id="txtData"
+                    type="date">
+
+            </div>
+
+        </div>
+
+        <label class="check">
+
+            <input
+                type="checkbox"
+                id="chkTariffaAutoModal"
+                checked>
+
+            Tariffa automatica
+
+        </label>
+
+        <div class="riga">
+
+            <div class="campo">
+
+                <label for="txtPrezzo">
+
+                    Prezzo (€)
+
+                </label>
+
+                <input
+                    id="txtPrezzo"
+                    class="no-spin"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value="10"
+                    inputmode="decimal"
+                    autocomplete="off">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="txtTotale">
+
+                    Totale (€)
+
+                </label>
+
+                <input
+                    id="txtTotale"
+                    type="number"
+                    readonly
+                    tabindex="-1"
+                    autocomplete="off">
+
+            </div>
+
+        </div>
+
+        <div class="riga">
+
+            <div class="campo">
+
+                <label for="txtAcconto">
+
+                    Acconto (€)
+
+                </label>
+
+                <input
+                    id="txtAcconto"
+                    type="text"
+                    value="0"
+                    inputmode="decimal"
+                    autocomplete="off">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="txtSaldo">
+
+                    Da saldare
+
+                </label>
+
+                <input
+                    id="txtSaldo"
+                    type="text"
+                    readonly
+                    tabindex="-1"
+                    autocomplete="off">
+
+            </div>
+
+        </div>
+
+        <div class="modal-buttons">
+
+            <button
+                id="btnAnnulla"
+                type="button">
+
+                Annulla
+
+            </button>
+
+            <button
+                id="btnSalva"
+                type="button">
+
+                Salva
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ==========================================================
+     MODAL PAGAMENTO
+=========================================================== -->
+
+<div
+    id="modalPagamento"
+    class="modal hidden"
+    role="dialog"
+    aria-modal="true">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2>💶 Registra pagamento</h2>
+
+            <button
+                id="btnChiudiPagamento"
+                type="button"
+                class="btn-close">
+
+                &times;
+
+            </button>
+
+        </div>
+
+        <label for="txtImportoPagamento">
+
+            Importo (€)
+
+        </label>
+
+        <input
+            id="txtImportoPagamento"
+            type="number"
+            min="0"
+            step="0.01"
+            value="0"
+            autocomplete="off">
+
+        <div class="modal-buttons">
+
+            <button
+                id="btnAnnullaPagamento"
+                type="button">
+
+                Annulla
+
+            </button>
+
+            <button
+                id="btnSalvaPagamento"
+                type="button">
+
+                Salva
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==========================================================
+     JAVASCRIPT
+=========================================================== -->
+
+<!-- Stato applicazione -->
+
+<script src="js/stato.js"></script>
+
+<!-- Riferimenti DOM -->
+
+<script src="js/dom.js"></script>
+
+<!-- Utility -->
+
+<script src="js/utils.js"></script>
+
+<!-- Layout spiaggia -->
+
+<script src="js/layout.js"></script>
+
+<!-- Modello prenotazione -->
+
+<script src="js/prenotazione.js"></script>
+
+<!-- Gestione mappa sdraie -->
+
+<script src="js/sdraie.js"></script>
+
+<!-- Archivio prenotazioni -->
+
+<script src="js/prenotazioni.js"></script>
+
+<!-- Pagamenti -->
+
+<script src="js/pagamenti.js"></script>
+
+<!-- Modalità modifica -->
+
+<script src="js/modifica.js"></script>
+
+<!-- Scheda prenotazione -->
+
+<script src="js/scheda.js"></script>
+
+<!-- Bootstrap applicazione -->
+
+<script src="js/app.js"></script>
+
+</body>
+
+</html>
