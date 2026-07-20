@@ -123,6 +123,9 @@ const DOM = {
         telefono:
             document.getElementById("txtTelefono"),
 
+        btnConfermaTelefono:
+            document.getElementById("btnConfermaTelefono"),
+
         numero:
             document.getElementById("txtNumero"),
 

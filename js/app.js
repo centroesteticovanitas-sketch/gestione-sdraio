@@ -235,6 +235,12 @@ function collegaEventi() {
 
     });
 
+    DOM.form.btnConfermaTelefono.addEventListener("click", () => {
+
+        DOM.form.telefono.blur();
+
+    });
+
     const cambiaNumeroSdraie = variazione => {
 
         const minimo = Number(DOM.form.numero.min) || 1;

@@ -204,18 +204,13 @@ async function salvaArchivioFirebase(prenotazioni) {
 
     try {
 
-        const batch = archivioFirebase.batch();
-
-        prenotazioni.forEach(prenotazione => {
-
-            batch.set(
-                archivioFirebase.collection("prenotazioni").doc(prenotazione.id),
-                JSON.parse(JSON.stringify(prenotazione))
-            );
-
-        });
-
-        await batch.commit();
+        await Promise.all(
+            prenotazioni.map(prenotazione =>
+                archivioFirebase.collection("prenotazioni")
+                    .doc(prenotazione.id)
+                    .set(JSON.parse(JSON.stringify(prenotazione)))
+            )
+        );
 
     }
     catch (errore) {
