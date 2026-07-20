@@ -320,9 +320,23 @@ async function creaEInviaLinkSumup(prenotazione) {
 
     try {
 
-        const creaLink = funzioniFirebase.httpsCallable("creaLinkSumup");
-        const risultato = await creaLink({ prenotazioneId: prenotazione.id });
-        const link = risultato.data?.url;
+        const token = await autenticazioneFirebase.currentUser.getIdToken();
+        const risposta = await fetch(
+            "https://europe-west1-gestione-sdraio.cloudfunctions.net/creaLinkSumup",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ prenotazioneId: prenotazione.id })
+            }
+        );
+        const risultato = await risposta.json();
+
+        if (!risposta.ok) throw new Error(risultato.errore || "Errore SumUp.");
+
+        const link = risultato.url;
 
         if (!link) throw new Error("Link SumUp non ricevuto.");
 
@@ -347,7 +361,10 @@ async function creaEInviaLinkSumup(prenotazione) {
 
         console.error("Creazione link SumUp non riuscita.", errore);
         finestraWhatsApp?.close();
-        avviso("Non è stato possibile creare il link SumUp. Controlla la configurazione SumUp.");
+        avviso(
+            errore.message ||
+            "Non è stato possibile creare il link SumUp. Controlla la configurazione SumUp."
+        );
 
     }
     finally {
