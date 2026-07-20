@@ -93,6 +93,14 @@ function collegaEventi() {
 
     );
 
+    const apriManuale = () => {
+
+        window.open("manuale.html", "_blank", "noopener");
+
+    };
+
+    DOM.header.btnManuale.addEventListener("click", apriManuale);
+
     DOM.header.btnPrenotaMobile.addEventListener("click", () => {
 
         DOM.header.btnPrenota.click();
@@ -124,6 +132,13 @@ function collegaEventi() {
 
         nascondi(DOM.header.menuMobile);
         apriGestioneTariffe();
+
+    });
+
+    DOM.header.btnManualeMobile.addEventListener("click", () => {
+
+        nascondi(DOM.header.menuMobile);
+        apriManuale();
 
     });
 

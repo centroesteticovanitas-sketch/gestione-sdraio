@@ -41,6 +41,9 @@ const DOM = {
         badgeIncassi:
             document.getElementById("badgeIncassi"),
 
+        btnManuale:
+            document.getElementById("btnManuale"),
+
         btnEsci:
             document.getElementById("btnEsci"),
 
@@ -55,6 +58,9 @@ const DOM = {
 
         btnTariffeMobile:
             document.getElementById("btnTariffeMobile"),
+
+        btnManualeMobile:
+            document.getElementById("btnManualeMobile"),
 
         btnEsciMobile:
             document.getElementById("btnEsciMobile"),
