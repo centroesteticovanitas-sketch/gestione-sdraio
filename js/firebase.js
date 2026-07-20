@@ -16,16 +16,6 @@ let sincronizzazioneFirebaseAttiva = false;
 let interrompiAscoltoPrenotazioni = null;
 let primoCaricamentoFirebase = true;
 let ultimoSalvataggioFirebase = Promise.resolve();
-const uscitaFirebaseRichiesta = new URLSearchParams(window.location.search)
-    .get("logout") === "1";
-
-if (uscitaFirebaseRichiesta) {
-
-    autenticazioneFirebase.signOut()
-        .catch(errore => console.error("Logout Firebase non riuscito.", errore))
-        .finally(() => window.history.replaceState({}, "", "index.html"));
-
-}
 
 function ruoloFirebaseCorrente() {
 
@@ -91,17 +81,6 @@ function inizializzaAccessoFirebase() {
     };
 
     autenticazioneFirebase.onAuthStateChanged(utente => {
-
-        if (uscitaFirebaseRichiesta) {
-
-            document.body.classList.remove("collaboratore");
-            document.body.classList.add("non-autenticato");
-            nascondi(DOM.header.menuMobile);
-            mostra(DOM.modal.accesso);
-
-            return;
-
-        }
 
         if (!utente) {
 
