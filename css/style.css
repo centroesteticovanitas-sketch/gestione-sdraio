@@ -2261,4 +2261,5 @@ body.collaboratore #btnElimina{
 
 @media(max-width:700px){
     #scheda{min-height:48px;padding:10px 12px;line-height:1.35;}
+    #scheda.selezione-attiva{display:none;}
 }

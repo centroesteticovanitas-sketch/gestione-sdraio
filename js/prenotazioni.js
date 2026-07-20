@@ -625,6 +625,7 @@ function salvaSceltaNuovaPrenotazione() {
 
     aggiungiPrenotazione(prenotazione);
     rimuoviEvidenziazione();
+    DOM.mappa.scheda.classList.remove("selezione-attiva");
     chiudiScheda();
 
 }
@@ -654,6 +655,8 @@ function iniziaSceltaSdraie() {
     DOM.header.btnPrenota.textContent = "Annulla selezione";
     DOM.mappa.scheda.innerHTML =
         `Seleziona ${DOM.form.numero.value} sdraie sulla planimetria: la prenotazione verrà salvata automaticamente.`;
+
+    DOM.mappa.scheda.classList.add("selezione-attiva");
 
     chiudiModalPrenotazione();
     ridisegnaSdraie();
@@ -942,6 +945,8 @@ function annullaPrenotazione() {
     Stato.prenotazioneInModifica = null;
 
     Stato.modalita = Modalita.NORMALE;
+
+    DOM.mappa.scheda.classList.remove("selezione-attiva");
 
     DOM.header.btnPrenota.textContent = "➕ Prenotazione";
 
