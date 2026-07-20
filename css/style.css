@@ -2276,3 +2276,18 @@ body.non-autenticato #scheda{
     #scheda{min-height:48px;padding:10px 12px;line-height:1.35;}
     #scheda.selezione-attiva{pointer-events:none;}
 }
+
+/* Controlli pratici per inserimento e consultazione da smartphone. */
+.number-stepper{display:flex;align-items:stretch;gap:5px;}
+.number-stepper input{min-width:0;text-align:center;}
+.number-stepper button{width:46px;min-height:46px;border:0;border-radius:9px;background:#1976d2;color:#fff;font-size:28px;font-weight:bold;line-height:1;cursor:pointer;box-shadow:0 2px 5px rgba(25,118,210,.28);}
+.riepilogo-prossime-prenotazioni{margin-top:16px;border-top:1px solid #e2e7eb;padding-top:12px;}
+.riepilogo-prossime-prenotazioni h3{margin:0 0 8px;font-size:16px;color:#16324a;}
+.riepilogo-prossime-prenotazioni p{margin:0;color:#667;}
+.riga-prossima-prenotazione{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #edf0f2;font-size:14px;}
+@media(max-width:700px){
+    .navigazione-data{grid-template-columns:34px minmax(0,1fr) 42px 34px !important;}
+    .navigazione-data #btnOggi{display:block !important;font-size:12px !important;}
+    .riga-prossima-prenotazione{grid-template-columns:auto 1fr;}
+    .riga-prossima-prenotazione span:last-child{grid-column:2;color:#52606d;}
+}
