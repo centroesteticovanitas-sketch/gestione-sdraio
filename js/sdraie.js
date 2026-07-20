@@ -362,6 +362,16 @@ function ridisegnaSdraie() {
 
     });
 
+    if (Stato.modalita === Modalita.NUOVA_PRENOTAZIONE) {
+
+        Stato.sdraieSelezionate.forEach(id => {
+
+            occupaSdraia(id, Stato.coloreSelezione);
+
+        });
+
+    }
+
     aggiornaBarraStato();
 
 }

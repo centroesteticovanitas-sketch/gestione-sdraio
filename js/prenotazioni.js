@@ -382,6 +382,16 @@ function sdraiaDisponibile(id) {
 
 }
 
+function sdraiaDisponibilePerSelezione(id) {
+
+    if (Stato.sdraieSelezionate.includes(id)) return true;
+
+    return !prenotazioniDelGiorno(DOM.form.data.value).some(
+        prenotazione => prenotazione.sdraie.includes(id)
+    );
+
+}
+
 function sdraieDisponibili() {
 
     return layout.filter(
@@ -430,9 +440,12 @@ function selezionaSdraia(id) {
     const indice = Stato.sdraieSelezionate.indexOf(id);
     const numeroRichiesto = Stato.numeroSdraieRichiesto || intero(DOM.form.numero.value);
 
-    if (indice < 0 && !sdraiaDisponibile(id)) {
+    if (indice < 0 && !sdraiaDisponibilePerSelezione(id)) {
 
         flashSdraie([id]);
+
+        DOM.mappa.scheda.innerHTML =
+            `La sdraia ${id} è già occupata. Seleziona un'altra postazione.`;
 
         return;
     
