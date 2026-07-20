@@ -14,6 +14,37 @@
 const VIEWBOX_WIDTH = 480;
 const VIEWBOX_HEIGHT = 750;
 
+let zoomMappa = 1;
+
+function cambiaZoomMappa(variazione) {
+
+    zoomMappa = Math.min(1.75, Math.max(1, zoomMappa + variazione));
+
+    aggiornaZoomMappa();
+
+}
+
+function reimpostaZoomMappa() {
+
+    zoomMappa = 1;
+
+    aggiornaZoomMappa();
+
+}
+
+function aggiornaZoomMappa() {
+
+    DOM.mappa.contenitore.style.width = `${zoomMappa * 100}%`;
+    DOM.mappa.zoomReset.textContent = `${Math.round(zoomMappa * 100)}%`;
+
+    if (zoomMappa === 1) {
+
+        DOM.mappa.viewport.scrollLeft = 0;
+
+    }
+
+}
+
 /* ============================================================
  * CREAZIONE SINGOLA SDRAIA
  * ============================================================
@@ -275,6 +306,19 @@ function aggiornaBarraStato() {
 
     DOM.header.lblOccupate.textContent =
         `🔴 Occupate: ${occupate}`;
+
+    aggiornaIndicatoreIncassi();
+
+}
+
+function aggiornaIndicatoreIncassi() {
+
+    const daSaldare = Stato.prenotazioni.filter(
+        prenotazione => prenotazione.saldo > 0
+    ).length;
+
+    DOM.header.badgeIncassi.textContent = daSaldare;
+    DOM.header.badgeIncassi.classList.toggle("hidden", daSaldare === 0);
 
 }
 

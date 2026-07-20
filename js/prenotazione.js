@@ -22,6 +22,8 @@ function creaPrenotazione(dati = {}) {
 
         telefono: dati.telefono ?? "",
 
+        note: dati.note ?? "",
+
         data: dati.data ?? oggiISO(),
 
         numero: dati.numero ?? 0,
@@ -102,7 +104,9 @@ function aggiungiPagamento(
 
     importo,
 
-    descrizione = "Pagamento"
+    metodo = "Non specificato",
+
+    operatore = "Non specificato"
 
 ) {
 
@@ -118,7 +122,11 @@ function aggiungiPagamento(
 
         data: oggiISO(),
 
-        descrizione,
+        descrizione: `Pagamento ${metodo} · ${operatore}`,
+
+        metodo,
+
+        operatore,
 
         importo
 

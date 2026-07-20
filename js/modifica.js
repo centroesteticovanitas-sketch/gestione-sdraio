@@ -165,6 +165,8 @@ function annullaModificaPostazioni() {
 
     esciModalitaModifica();
 
+    chiudiScheda();
+
 }
 
 /* ============================================================

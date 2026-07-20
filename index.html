@@ -39,9 +39,19 @@
 
     <div class="azioni">
 
-        <input
-            type="date"
-            id="data">
+        <div class="navigazione-data" aria-label="Navigazione data">
+
+            <button id="btnDataPrecedente" type="button" aria-label="Giorno precedente">‹</button>
+
+            <input
+                type="date"
+                id="data">
+
+            <button id="btnOggi" type="button">Oggi</button>
+
+            <button id="btnDataSuccessiva" type="button" aria-label="Giorno successivo">›</button>
+
+        </div>
 
         <div id="barraStato">
 
@@ -76,27 +86,57 @@
 
         </button>
 
+        <button id="btnStatistiche" type="button">
+
+            📊 Statistiche
+
+        </button>
+
+        <button id="btnTariffe" type="button">
+
+            ⚙️ Tariffe
+
+        </button>
+
+        <button id="btnIncassi" type="button">
+
+            💶 Incassi
+
+            <span id="badgeIncassi" class="badge-incassi hidden" aria-label="Prenotazioni da saldare"></span>
+
+        </button>
+
     </div>
 
 </header>
 
 <main>
 
-    <div id="mappa">
+    <div id="mappaViewport">
 
-        <img
-            id="planimetria"
-            src="img/planimetria.svg"
-            alt="Planimetria"
-            loading="eager"
-            draggable="false">
+        <div id="mappa">
 
-        <div
-            id="layerSdraie"
-            aria-hidden="true">
+            <img
+                id="planimetria"
+                src="img/planimetria.svg"
+                alt="Planimetria"
+                loading="eager"
+                draggable="false">
+
+            <div
+                id="layerSdraie"
+                aria-hidden="true">
+
+            </div>
 
         </div>
 
+    </div>
+
+    <div class="controlli-mappa" aria-label="Zoom planimetria">
+        <button id="btnZoomMeno" type="button" aria-label="Riduci zoom">−</button>
+        <button id="btnZoomReset" type="button">100%</button>
+        <button id="btnZoomPiu" type="button" aria-label="Aumenta zoom">+</button>
     </div>
 
 </main>
@@ -175,6 +215,18 @@
             class="errore">
 
         </div>
+
+        <label for="txtNote">
+
+            Note
+
+        </label>
+
+        <textarea
+            id="txtNote"
+            rows="2"
+            maxlength="200"
+            placeholder="Es. Arrivo nel pomeriggio"></textarea>
 
         <div class="riga">
 
@@ -331,6 +383,86 @@
     </div>
 
 </div>
+
+<!-- ==========================================================
+     MODAL INCASSI
+=========================================================== -->
+
+<div id="modalIncassi" class="modal hidden" role="dialog" aria-modal="true">
+
+    <div class="modal-box modal-incassi">
+
+        <div class="modal-header">
+            <h2>💶 Incassi</h2>
+            <button id="btnChiudiIncassi" type="button" class="btn-close">&times;</button>
+        </div>
+
+        <input id="txtCercaIncassi" type="search" placeholder="Cerca cliente, telefono o sdraia" autocomplete="off">
+
+        <select id="cmbFiltroIncassi" aria-label="Filtro incassi">
+            <option value="da_saldare">Da saldare</option>
+            <option value="tutte">Tutte le prenotazioni</option>
+            <option value="saldate">Saldate</option>
+        </select>
+
+        <div id="listaIncassi" class="lista-incassi"></div>
+
+    </div>
+
+</div>
+
+<!-- ==========================================================
+     MODAL TARIFFE
+=========================================================== -->
+
+<div id="modalTariffe" class="modal hidden" role="dialog" aria-modal="true">
+
+    <div class="modal-box modal-tariffe">
+
+        <div class="modal-header">
+            <h2>⚙️ Tariffe</h2>
+            <button id="btnChiudiTariffe" type="button" class="btn-close">&times;</button>
+        </div>
+
+        <label for="txtTariffaStandard">Prezzo standard giornaliero (€)</label>
+        <input id="txtTariffaStandard" type="number" min="0" step="0.01" inputmode="decimal">
+
+        <div class="riga">
+            <div class="campo">
+                <label for="txtTariffaSabato">Tutti i sabati (€)</label>
+                <input id="txtTariffaSabato" type="number" min="0" step="0.01" inputmode="decimal">
+            </div>
+            <div class="campo">
+                <label for="txtTariffaDomenica">Tutte le domeniche (€)</label>
+                <input id="txtTariffaDomenica" type="number" min="0" step="0.01" inputmode="decimal">
+            </div>
+        </div>
+
+        <div class="tariffe-speciali">
+            <strong>Date con tariffa speciale</strong>
+            <div class="riga">
+                <div class="campo">
+                    <label for="txtDataSpeciale">Data</label>
+                    <input id="txtDataSpeciale" type="date">
+                </div>
+                <div class="campo">
+                    <label for="txtPrezzoSpeciale">Prezzo (€)</label>
+                    <input id="txtPrezzoSpeciale" type="number" min="0" step="0.01" inputmode="decimal">
+                </div>
+            </div>
+            <button id="btnAggiungiTariffaSpeciale" type="button" class="btn-secondario">Aggiungi data speciale</button>
+            <div id="listaDateSpeciali" class="lista-tariffe-speciali"></div>
+        </div>
+
+        <div class="modal-buttons">
+            <button id="btnAnnullaTariffe" type="button">Annulla</button>
+            <button id="btnSalvaTariffe" type="button">Salva tariffe</button>
+        </div>
+
+    </div>
+
+</div>
+
 <!-- ==========================================================
      MODAL PAGAMENTO
 =========================================================== -->
@@ -371,6 +503,30 @@
             step="0.01"
             value="0"
             autocomplete="off">
+
+        <label for="cmbMetodoPagamento">
+
+            Metodo di pagamento
+
+        </label>
+
+        <select id="cmbMetodoPagamento">
+            <option value="SumUp">SumUp</option>
+            <option value="Contanti">Contanti</option>
+        </select>
+
+        <label for="cmbOperatorePagamento">
+
+            Operatore
+
+        </label>
+
+        <select id="cmbOperatorePagamento">
+            <option value="">Seleziona operatore</option>
+            <option value="Debhora">Debhora</option>
+            <option value="Daniele">Daniele</option>
+            <option value="Giuseppe">Giuseppe</option>
+        </select>
 
         <div class="modal-buttons">
 
@@ -431,6 +587,14 @@
 <!-- Pagamenti -->
 
 <script src="js/pagamenti.js"></script>
+
+<!-- Incassi -->
+
+<script src="js/incassi.js"></script>
+
+<!-- Statistiche -->
+
+<script src="js/statistiche.js"></script>
 
 <!-- Modalità modifica -->
 

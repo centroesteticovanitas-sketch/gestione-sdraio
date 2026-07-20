@@ -225,6 +225,8 @@ function salvaModifichePrenotazione(dati) {
 
     p.telefono = dati.telefono;
 
+    p.note = dati.note;
+
     p.data = dati.data;
 
     p.prezzo = dati.prezzo;
@@ -257,6 +259,10 @@ function leggiFormPrenotazione() {
         telefono:
 
             DOM.form.telefono.value.trim(),
+
+        note:
+
+            DOM.form.note.value.trim(),
 
         data:
 
@@ -515,6 +521,7 @@ function resetModal() {
 
     DOM.form.cognome.value = "";
     DOM.form.telefono.value = "";
+    DOM.form.note.value = "";
 
     DOM.form.numero.value = 2;
     DOM.form.numero.readOnly = false;
@@ -540,6 +547,8 @@ function caricaPrenotazioneNelModal(prenotazione) {
     DOM.form.cognome.value = prenotazione.cognome;
 
     DOM.form.telefono.value = prenotazione.telefono;
+
+    DOM.form.note.value = prenotazione.note ?? "";
 
     DOM.form.numero.value = prenotazione.numero;
 
@@ -789,6 +798,7 @@ function salvaPrenotazione() {
             Stato.prenotazionePostazioniOriginale = {
                 cognome: prenotazione.cognome,
                 telefono: prenotazione.telefono,
+                note: prenotazione.note,
                 data: prenotazione.data,
                 numero: prenotazione.numero,
                 prezzo: prenotazione.prezzo,
@@ -797,6 +807,7 @@ function salvaPrenotazione() {
 
             prenotazione.cognome = dati.cognome;
             prenotazione.telefono = dati.telefono;
+            prenotazione.note = dati.note;
             prenotazione.data = dati.data;
             prenotazione.numero = dati.numero;
             prenotazione.prezzo = dati.prezzo;

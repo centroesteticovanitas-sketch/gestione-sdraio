@@ -67,6 +67,59 @@ function collegaEventi() {
 
     );
 
+    DOM.header.btnStatistiche.addEventListener(
+
+        "click",
+
+        mostraStatistiche
+
+    );
+
+    DOM.header.btnTariffe.addEventListener(
+
+        "click",
+
+        apriGestioneTariffe
+
+    );
+
+    DOM.header.btnIncassi.addEventListener(
+
+        "click",
+
+        apriGestioneIncassi
+
+    );
+
+    DOM.header.btnDataPrecedente.addEventListener(
+
+        "click",
+
+        () => cambiaDataRapidamente(-1)
+
+    );
+
+    DOM.header.btnOggi.addEventListener(
+
+        "click",
+
+        () => {
+
+            DOM.header.data.value = oggiISO();
+            cambiaDataVisualizzata();
+
+        }
+
+    );
+
+    DOM.header.btnDataSuccessiva.addEventListener(
+
+        "click",
+
+        () => cambiaDataRapidamente(1)
+
+    );
+
     /* ---------------- MODAL PRENOTAZIONE ---------------- */
 
     DOM.modal.pulsanti.chiudiPrenotazione.addEventListener(
@@ -99,7 +152,7 @@ function collegaEventi() {
 
         "click",
 
-        chiudiModalPagamento
+        annullaRegistrazionePagamento
 
     );
 
@@ -107,7 +160,7 @@ function collegaEventi() {
 
         "click",
 
-        chiudiModalPagamento
+        annullaRegistrazionePagamento
 
     );
 
@@ -153,6 +206,12 @@ function collegaEventi() {
 
     );
 
+    DOM.modal.pulsanti.chiudiTariffe.addEventListener("click", chiudiGestioneTariffe);
+
+    DOM.modal.pulsanti.annullaTariffe.addEventListener("click", chiudiGestioneTariffe);
+
+    DOM.modal.pulsanti.salvaTariffe.addEventListener("click", salvaGestioneTariffe);
+
     DOM.form.chkTariffaAuto.addEventListener(
 
         "change",
@@ -196,6 +255,12 @@ function collegaEventi() {
 
     );
 
+    DOM.mappa.zoomMeno.addEventListener("click", () => cambiaZoomMappa(-0.25));
+
+    DOM.mappa.zoomReset.addEventListener("click", reimpostaZoomMappa);
+
+    DOM.mappa.zoomPiu.addEventListener("click", () => cambiaZoomMappa(0.25));
+
     /* ---------------- TASTIERA ---------------- */
 
     document.addEventListener(
@@ -212,6 +277,22 @@ function collegaEventi() {
  * NUOVA PRENOTAZIONE
  * ============================================================
  */
+
+function cambiaDataRapidamente(giorni) {
+
+    const data = new Date(`${DOM.header.data.value || oggiISO()}T00:00:00`);
+
+    data.setDate(data.getDate() + giorni);
+
+    DOM.header.data.value = [
+        data.getFullYear(),
+        String(data.getMonth() + 1).padStart(2, "0"),
+        String(data.getDate()).padStart(2, "0")
+    ].join("-");
+
+    cambiaDataVisualizzata();
+
+}
 
 function nuovaPrenotazione() {
 
@@ -292,7 +373,7 @@ function chiudiPagamentoBackdrop(e) {
 
     if (e.target === DOM.modal.pagamento) {
 
-        chiudiModalPagamento();
+        annullaRegistrazionePagamento();
 
     }
 
@@ -313,7 +394,7 @@ function gestisciTastiera(e) {
 
     if (!DOM.modal.pagamento.classList.contains("hidden")) {
 
-        chiudiModalPagamento();
+        annullaRegistrazionePagamento();
 
         return;
 

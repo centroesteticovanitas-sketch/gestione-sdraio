@@ -17,6 +17,10 @@ function registraPagamento(prenotazione) {
 
     DOM.pagamento.importo.value = "";
 
+    DOM.pagamento.metodo.value = "SumUp";
+
+    DOM.pagamento.operatore.value = "";
+
     apriModalPagamento();
 
 }
@@ -38,9 +42,21 @@ function salvaPagamento() {
 
     );
 
+    const metodo = DOM.pagamento.metodo.value;
+
+    const operatore = DOM.pagamento.operatore.value;
+
     if (importo <= 0) {
 
         avviso("Inserisci un importo valido.");
+
+        return;
+
+    }
+
+    if (!operatore) {
+
+        avviso("Seleziona l'operatore che ha ricevuto il pagamento.");
 
         return;
 
@@ -56,13 +72,21 @@ function salvaPagamento() {
 
     }
 
-    aggiungiPagamento(prenotazione, importo);
+    aggiungiPagamento(prenotazione, importo, metodo, operatore);
 
     salvaArchivio();
 
     chiudiModalPagamento();
 
     Stato.prenotazionePagamento = null;
+
+    if (gestioneIncassiAperta) {
+
+        apriGestioneIncassi();
+
+        return;
+
+    }
 
     Stato.schedaAperta = null;
 
@@ -71,6 +95,20 @@ function salvaPagamento() {
         prenotazione.sdraie[0]
 
     );
+
+}
+
+function annullaRegistrazionePagamento() {
+
+    Stato.prenotazionePagamento = null;
+
+    chiudiModalPagamento();
+
+    if (gestioneIncassiAperta) {
+
+        apriGestioneIncassi();
+
+    }
 
 }
 

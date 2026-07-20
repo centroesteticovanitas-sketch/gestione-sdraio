@@ -201,12 +201,162 @@ function avviso(messaggio) {
 
 }
 
+const CHIAVE_TARIFFE = "amurusu-tariffe-v1";
+
+let tariffeInModifica = null;
+
+function leggiTariffe() {
+
+    try {
+
+        const salvate = JSON.parse(localStorage.getItem(CHIAVE_TARIFFE) || "null");
+
+        return {
+            prezzoStandard: numero(salvate?.prezzoStandard) || 10,
+            prezzoSabato: salvate?.prezzoSabato ?? (numero(salvate?.prezzoStandard) || 10),
+            prezzoDomenica: salvate?.prezzoDomenica ?? (numero(salvate?.prezzoStandard) || 10),
+            dateSpeciali: salvate?.dateSpeciali ?? {}
+        };
+
+    }
+    catch (errore) {
+
+        console.warn("Tariffe non leggibili.", errore);
+
+        return {
+            prezzoStandard: 10,
+            prezzoSabato: 10,
+            prezzoDomenica: 10,
+            dateSpeciali: {}
+        };
+
+    }
+
+}
+
 function prezzoAutomaticoPerData(data) {
 
-    if (!data) return 10;
+    const tariffe = leggiTariffe();
 
-    const [anno, mese, giorno] = data.split("-").map(Number);
+    if (tariffe.dateSpeciali[data] !== undefined) {
 
-    return new Date(anno, mese - 1, giorno).getDay() === 0 ? 12 : 10;
+        return numero(tariffe.dateSpeciali[data]);
+
+    }
+
+    const giorno = new Date(`${data}T00:00:00`).getDay();
+
+    if (giorno === 6) return numero(tariffe.prezzoSabato);
+
+    if (giorno === 0) return numero(tariffe.prezzoDomenica);
+
+    return tariffe.prezzoStandard;
+
+}
+
+function apriGestioneTariffe() {
+
+    tariffeInModifica = leggiTariffe();
+
+    document.getElementById("txtTariffaStandard").value = tariffeInModifica.prezzoStandard;
+    document.getElementById("txtTariffaSabato").value = tariffeInModifica.prezzoSabato;
+    document.getElementById("txtTariffaDomenica").value = tariffeInModifica.prezzoDomenica;
+    document.getElementById("txtDataSpeciale").value = "";
+    document.getElementById("txtPrezzoSpeciale").value = "";
+
+    document.getElementById("btnAggiungiTariffaSpeciale").onclick = aggiungiDataSpeciale;
+
+    mostraListaDateSpeciali();
+    mostra(DOM.modal.tariffe);
+
+}
+
+function chiudiGestioneTariffe() {
+
+    tariffeInModifica = null;
+    nascondi(DOM.modal.tariffe);
+
+}
+
+function aggiungiDataSpeciale() {
+
+    const data = document.getElementById("txtDataSpeciale").value;
+    const prezzo = numero(document.getElementById("txtPrezzoSpeciale").value);
+
+    if (!data || prezzo <= 0) {
+
+        avviso("Inserisci una data e un prezzo validi.");
+
+        return;
+
+    }
+
+    tariffeInModifica.dateSpeciali[data] = prezzo;
+
+    document.getElementById("txtDataSpeciale").value = "";
+    document.getElementById("txtPrezzoSpeciale").value = "";
+
+    mostraListaDateSpeciali();
+
+}
+
+function mostraListaDateSpeciali() {
+
+    const contenitore = document.getElementById("listaDateSpeciali");
+    const date = Object.keys(tariffeInModifica.dateSpeciali).sort();
+
+    if (!date.length) {
+
+        contenitore.innerHTML = "<em>Nessuna data speciale configurata.</em>";
+
+        return;
+
+    }
+
+    contenitore.innerHTML = date.map(data => `
+
+        <div class="riga-tariffa-speciale">
+            <span>${formattaData(data)}</span>
+            <strong>${euro(tariffeInModifica.dateSpeciali[data])} €</strong>
+            <button type="button" data-rimuovi-tariffa="${data}" aria-label="Rimuovi tariffa speciale">&times;</button>
+        </div>
+
+    `).join("");
+
+    contenitore.querySelectorAll("[data-rimuovi-tariffa]").forEach(pulsante => {
+
+        pulsante.onclick = () => {
+
+            delete tariffeInModifica.dateSpeciali[pulsante.dataset.rimuoviTariffa];
+            mostraListaDateSpeciali();
+
+        };
+
+    });
+
+}
+
+function salvaGestioneTariffe() {
+
+    const prezzoStandard = numero(document.getElementById("txtTariffaStandard").value);
+    const prezzoSabato = numero(document.getElementById("txtTariffaSabato").value);
+    const prezzoDomenica = numero(document.getElementById("txtTariffaDomenica").value);
+
+    if (prezzoStandard <= 0 || prezzoSabato <= 0 || prezzoDomenica <= 0) {
+
+        avviso("Inserisci prezzi validi per tariffa standard, sabato e domenica.");
+
+        return;
+
+    }
+
+    tariffeInModifica.prezzoStandard = prezzoStandard;
+    tariffeInModifica.prezzoSabato = prezzoSabato;
+    tariffeInModifica.prezzoDomenica = prezzoDomenica;
+
+    localStorage.setItem(CHIAVE_TARIFFE, JSON.stringify(tariffeInModifica));
+
+    aggiornaTariffaAutomatica();
+    chiudiGestioneTariffe();
 
 }

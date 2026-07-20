@@ -102,6 +102,8 @@ function creaHtmlScheda(p, id) {
         <div><strong>Telefono</strong></div>
         <div>${p.telefono || "-"}</div>
 
+        ${p.note ? `<div><strong>Note</strong></div><div>${p.note}</div>` : ""}
+
         <div><strong>Postazioni</strong></div>
         <div>${p.numero}</div>
 

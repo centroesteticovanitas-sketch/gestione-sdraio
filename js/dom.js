@@ -17,8 +17,29 @@ const DOM = {
         data:
             document.getElementById("data"),
 
+        btnDataPrecedente:
+            document.getElementById("btnDataPrecedente"),
+
+        btnOggi:
+            document.getElementById("btnOggi"),
+
+        btnDataSuccessiva:
+            document.getElementById("btnDataSuccessiva"),
+
         btnPrenota:
             document.getElementById("btnPrenota"),
+
+        btnStatistiche:
+            document.getElementById("btnStatistiche"),
+
+        btnTariffe:
+            document.getElementById("btnTariffe"),
+
+        btnIncassi:
+            document.getElementById("btnIncassi"),
+
+        badgeIncassi:
+            document.getElementById("badgeIncassi"),
 
         barraStato:
             document.getElementById("barraStato"),
@@ -43,11 +64,23 @@ const DOM = {
         contenitore:
             document.getElementById("mappa"),
 
+        viewport:
+            document.getElementById("mappaViewport"),
+
         layer:
             document.getElementById("layerSdraie"),
 
         scheda:
-            document.getElementById("scheda")
+            document.getElementById("scheda"),
+
+        zoomMeno:
+            document.getElementById("btnZoomMeno"),
+
+        zoomReset:
+            document.getElementById("btnZoomReset"),
+
+        zoomPiu:
+            document.getElementById("btnZoomPiu")
 
     },
 
@@ -77,6 +110,9 @@ const DOM = {
 
         acconto:
             document.getElementById("txtAcconto"),
+
+        note:
+            document.getElementById("txtNote"),
 
         saldo:
             document.getElementById("txtSaldo"),
@@ -115,6 +151,12 @@ const DOM = {
         pagamento:
             document.getElementById("modalPagamento"),
 
+        tariffe:
+            document.getElementById("modalTariffe"),
+
+        incassi:
+            document.getElementById("modalIncassi"),
+
         pulsanti: {
 
             chiudiPrenotazione:
@@ -133,7 +175,16 @@ const DOM = {
                 document.getElementById("btnAnnullaPagamento"),
 
             salvaPagamento:
-                document.getElementById("btnSalvaPagamento")
+                document.getElementById("btnSalvaPagamento"),
+
+            chiudiTariffe:
+                document.getElementById("btnChiudiTariffe"),
+
+            annullaTariffe:
+                document.getElementById("btnAnnullaTariffe"),
+
+            salvaTariffe:
+                document.getElementById("btnSalvaTariffe")
 
         }
 
@@ -146,7 +197,13 @@ const DOM = {
     pagamento: {
 
         importo:
-            document.getElementById("txtImportoPagamento")
+            document.getElementById("txtImportoPagamento"),
+
+        metodo:
+            document.getElementById("cmbMetodoPagamento"),
+
+        operatore:
+            document.getElementById("cmbOperatorePagamento")
 
     },
 
