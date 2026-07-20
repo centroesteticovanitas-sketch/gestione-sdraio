@@ -299,20 +299,20 @@ function creaHtmlContatti(prenotazione) {
         `Postazioni prenotate: ${prenotazione.numero} sdraie`,
         `Totale: ${euro(prenotazione.totale)} €`,
         "",
-        "🌊 REGOLAMENTO PRENOTAZIONE PISCINA - AMURUSU 🌞",
-        "🕘 Orari di apertura: 9:00 - 18:30",
-        "❗️Non si effettuano tariffe per mezza giornata.",
+        "REGOLAMENTO PRENOTAZIONE PISCINA - AMURUSU",
+        "Orari di apertura: 9:00 - 18:30",
+        "ATTENZIONE: Non si effettuano tariffe per mezza giornata.",
         "",
-        "📌 Regole da rispettare:",
+        "Regole da rispettare:",
         "- Non è consentito introdurre bevande: all’interno è presente un bar attrezzato.",
         "- È possibile utilizzare il barbecue messo a disposizione per i clienti.",
         "- Vietato fare tuffi.",
         "- Doccia obbligatoria prima di entrare in piscina.",
         "- I bambini devono essere sempre sorvegliati da un adulto, non sono ammessi bambini di età inferiore a 5 anni.",
         "",
-        "✅ Con il pagamento anticipato confermi di accettare il regolamento.",
+        "Con il pagamento anticipato confermi di accettare il regolamento.",
         "",
-        "Grazie e buona giornata! ☀️"
+        "Grazie e buona giornata!"
     ].join("\n");
 
     // Il WhatsApp normale è soltanto un promemoria: regolamento e pagamento
@@ -323,7 +323,7 @@ function creaHtmlContatti(prenotazione) {
         `Data: ${formattaData(prenotazione.data)}`,
         `Postazioni prenotate: ${prenotazione.numero} sdraie`,
         `Totale: ${euro(prenotazione.totale)} €`,
-        "Grazie e buona giornata! ☀️"
+        "Grazie e buona giornata!"
     ].join("\n");
 
     const azioneSumup = utenteFirebaseAmministratore() ? `
@@ -403,23 +403,23 @@ async function creaEInviaLinkSumup(prenotazione) {
         `Postazioni prenotate: ${prenotazione.numero} sdraie`,
             `Totale: ${euro(prenotazione.totale)} €`,
             "",
-            "🌊 REGOLAMENTO PRENOTAZIONE PISCINA - AMURUSU 🌞",
-            "🕘 Orari di apertura: 9:00 - 18:30",
-            "❗️Non si effettuano tariffe per mezza giornata.",
+            "REGOLAMENTO PRENOTAZIONE PISCINA - AMURUSU",
+            "Orari di apertura: 9:00 - 18:30",
+            "ATTENZIONE: Non si effettuano tariffe per mezza giornata.",
             "",
-            "📌 Regole da rispettare:",
+            "Regole da rispettare:",
             "- Non è consentito introdurre bevande: all’interno è presente un bar attrezzato.",
             "- È possibile utilizzare il barbecue messo a disposizione per i clienti.",
             "- Vietato fare tuffi.",
             "- Doccia obbligatoria prima di entrare in piscina.",
             "- I bambini devono essere sempre sorvegliati da un adulto, non sono ammessi bambini di età inferiore a 5 anni.",
             "",
-            `💳 Per confermare la prenotazione effettua il pagamento di ${euro(prenotazione.totale)} € tramite SumUp:`,
+            `Per confermare la prenotazione effettua il pagamento di ${euro(prenotazione.totale)} € tramite SumUp:`,
             link,
             "",
-            "✅ Con il pagamento anticipato confermi di accettare il regolamento.",
+            "Con il pagamento anticipato confermi di accettare il regolamento.",
             "",
-            "Grazie e buona giornata! ☀️"
+            "Grazie e buona giornata!"
         ].join("\n");
 
         window.location.href =
