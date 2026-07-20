@@ -483,9 +483,9 @@ function selezionaSdraia(id) {
 
     );
 
-    if (Stato.sdraieSelezionate.length >= numeroRichiesto) {
+    if (Stato.sdraieSelezionate.length === numeroRichiesto) {
 
-        salvaPrenotazione();
+        salvaSceltaNuovaPrenotazione();
 
         return;
 
@@ -543,6 +543,7 @@ function resetModal() {
 
     Stato.prenotazioneInModifica = null;
     Stato.sdraieSelezionate = [];
+    Stato.numeroSdraieRichiesto = 0;
     Stato.coloreSelezione = null;
 
     DOM.form.cognome.value = "";
@@ -587,6 +588,44 @@ function caricaPrenotazioneNelModal(prenotazione) {
     DOM.form.acconto.value = prenotazione.acconto;
 
     aggiornaTotale();
+
+}
+
+function salvaSceltaNuovaPrenotazione() {
+
+    const numeroRichiesto = Stato.numeroSdraieRichiesto;
+
+    if (Stato.sdraieSelezionate.length !== numeroRichiesto) return;
+
+    if (!validaPrenotazione(false)) return;
+
+    const conflitto = Stato.sdraieSelezionate.some(id =>
+        prenotazioniDelGiorno(DOM.form.data.value).some(
+            prenotazione => prenotazione.sdraie.includes(id)
+        )
+    );
+
+    if (conflitto) {
+
+        avviso("Una delle sdraie selezionate è stata appena prenotata.");
+
+        return;
+
+    }
+
+    const dati = leggiFormPrenotazione();
+    const prenotazione = creaPrenotazione(dati);
+
+    assegnaSdraie(prenotazione, Stato.sdraieSelezionate);
+
+    Stato.sdraieSelezionate = [];
+    Stato.numeroSdraieRichiesto = 0;
+    Stato.modalita = Modalita.NORMALE;
+    Stato.coloreSelezione = null;
+
+    aggiungiPrenotazione(prenotazione);
+    rimuoviEvidenziazione();
+    chiudiScheda();
 
 }
 
