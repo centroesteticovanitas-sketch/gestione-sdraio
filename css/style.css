@@ -230,7 +230,7 @@ main{
 
     background:white;
 
-    min-height:90px;
+    min-height:52px;
 
     padding:15px 20px;
 
@@ -1179,6 +1179,20 @@ body.collaboratore #btnElimina{
 
 }
 
+@media(max-width:700px){
+
+    #scheda{
+
+        min-height:48px;
+
+        padding:10px 12px;
+
+        line-height:1.35;
+
+    }
+
+}
+
 /* Le regole finali prevalgono sui vecchi layout mobili. */
 @media(max-width:700px){
 
@@ -1204,8 +1218,8 @@ body.collaboratore #btnElimina{
     #btnEsciMobile{color:#b3261e;}
 
     main{position:relative;padding:8px 8px 120px;}
-    .azioni-rapide-mobile{position:absolute;top:18px;left:14px;right:14px;z-index:20;display:grid;grid-template-columns:1fr 1fr;gap:8px;pointer-events:none;}
-    .azioni-rapide-mobile button{min-height:42px;border:0;border-radius:11px;color:#fff;font-size:15px;font-weight:bold;box-shadow:0 3px 10px rgba(0,0,0,.2);pointer-events:auto;}
+    .azioni-rapide-mobile{position:static;margin:0 4px 8px;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .azioni-rapide-mobile button{min-height:42px;border:0;border-radius:11px;color:#fff;font-size:15px;font-weight:bold;box-shadow:0 3px 10px rgba(0,0,0,.2);}
     #btnPrenotaMobile{background:#1976d2;}
     #btnIncassiMobile{background:#7b1fa2;}
 
@@ -2236,11 +2250,15 @@ body.collaboratore #btnElimina{
     .menu-mobile button{min-height:42px;border:0;border-radius:8px;background:#f3f5f7;text-align:left;padding:0 12px;font-size:15px;}
     #btnEsciMobile{color:#b3261e;}
     main{position:relative;padding:8px 8px 120px;}
-    .azioni-rapide-mobile{position:absolute;top:18px;left:14px;right:14px;z-index:20;display:grid;grid-template-columns:1fr 1fr;gap:8px;pointer-events:none;}
-    .azioni-rapide-mobile button{min-height:42px;border:0;border-radius:11px;color:#fff;font-size:15px;font-weight:bold;box-shadow:0 3px 10px rgba(0,0,0,.2);pointer-events:auto;}
+    .azioni-rapide-mobile{position:static;margin:0 4px 8px;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .azioni-rapide-mobile button{min-height:42px;border:0;border-radius:11px;color:#fff;font-size:15px;font-weight:bold;box-shadow:0 3px 10px rgba(0,0,0,.2);}
     #btnPrenotaMobile{background:#1976d2;}
     #btnIncassiMobile{background:#7b1fa2;}
     body.collaboratore #btnPrenotaMobile{display:none;}
     body.collaboratore .azioni-rapide-mobile{grid-template-columns:1fr;left:25%;right:25%;}
     body.collaboratore #btnTariffeMobile,body.collaboratore #btnStatisticheMobile,body.collaboratore #btnEsciMobile{display:none;}
+}
+
+@media(max-width:700px){
+    #scheda{min-height:48px;padding:10px 12px;line-height:1.35;}
 }

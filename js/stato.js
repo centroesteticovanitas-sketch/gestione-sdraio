@@ -49,6 +49,8 @@ const Stato = {
 
     sdraieSelezionate: [],
 
+    numeroSdraieRichiesto: 0,
+
     coloreSelezione: null,
 
     sdraieModificate: [],
@@ -88,6 +90,8 @@ const Stato = {
         this.prenotazionePostazioniOriginale = null;
 
         this.sdraieSelezionate = [];
+
+        this.numeroSdraieRichiesto = 0;
 
         this.coloreSelezione = null;
 

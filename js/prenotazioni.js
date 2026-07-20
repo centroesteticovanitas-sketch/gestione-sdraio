@@ -428,6 +428,7 @@ function numeroSdraieOccupate() {
 function selezionaSdraia(id) {
 
     const indice = Stato.sdraieSelezionate.indexOf(id);
+    const numeroRichiesto = Stato.numeroSdraieRichiesto || intero(DOM.form.numero.value);
 
     if (indice < 0 && !sdraiaDisponibile(id)) {
 
@@ -452,6 +453,12 @@ function selezionaSdraia(id) {
     }
     else {
 
+        if (Stato.sdraieSelezionate.length >= numeroRichiesto) {
+
+            return;
+
+        }
+
         Stato.sdraieSelezionate.push(id);
         occupaSdraia(id, Stato.coloreSelezione);
 
@@ -463,7 +470,7 @@ function selezionaSdraia(id) {
 
     );
 
-    if (Stato.sdraieSelezionate.length === intero(DOM.form.numero.value)) {
+    if (Stato.sdraieSelezionate.length >= numeroRichiesto) {
 
         salvaPrenotazione();
 
@@ -472,7 +479,7 @@ function selezionaSdraia(id) {
     }
 
     DOM.mappa.scheda.innerHTML =
-        `Sdraie selezionate: ${Stato.sdraieSelezionate.length} di ${DOM.form.numero.value}. Premi «Salva prenotazione» per confermare.`;
+        `Sdraie selezionate: ${Stato.sdraieSelezionate.length} di ${numeroRichiesto}.`;
 
 }
 
@@ -588,6 +595,7 @@ function iniziaSceltaSdraie() {
 
     Stato.modalita = Modalita.NUOVA_PRENOTAZIONE;
     Stato.sdraieSelezionate = [];
+    Stato.numeroSdraieRichiesto = intero(DOM.form.numero.value);
     Stato.coloreSelezione = prossimoColore(DOM.form.data.value);
 
     DOM.header.data.value = DOM.form.data.value;
@@ -857,6 +865,7 @@ function salvaPrenotazione() {
     rimuoviEvidenziazione();
 
     Stato.modalita = Modalita.NORMALE;
+    Stato.numeroSdraieRichiesto = 0;
     Stato.coloreSelezione = null;
 
     DOM.header.btnPrenota.textContent = "➕ Prenotazione";
@@ -875,6 +884,7 @@ function salvaPrenotazione() {
 function annullaPrenotazione() {
 
     Stato.sdraieSelezionate = [];
+    Stato.numeroSdraieRichiesto = 0;
     Stato.coloreSelezione = null;
 
     Stato.prenotazioneInModifica = null;
