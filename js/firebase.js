@@ -80,26 +80,30 @@ function inizializzaAccessoFirebase() {
 
     };
 
-    const esciDaFirebase = async evento => {
+    const mostraAccessoSubito = () => {
 
-        evento?.preventDefault();
-
-        try {
-
-            await autenticazioneFirebase.signOut();
-
-        }
-        catch (erroreUscita) {
-
-            console.error("Impossibile effettuare il logout:", erroreUscita);
-            alert("Non è stato possibile uscire. Riprova tra qualche secondo.");
-
-        }
+        document.body.classList.remove("collaboratore");
+        document.body.classList.add("non-autenticato");
+        nascondi(DOM.header.menuMobile);
+        mostra(DOM.modal.accesso);
 
     };
 
-    DOM.header.btnEsci.addEventListener("click", esciDaFirebase);
-    DOM.header.btnEsciMobile.addEventListener("click", esciDaFirebase);
+    const esciDaFirebase = evento => {
+
+        evento?.preventDefault();
+        mostraAccessoSubito();
+
+        autenticazioneFirebase.signOut().catch(erroreUscita => {
+
+            console.error("Impossibile effettuare il logout:", erroreUscita);
+
+        });
+
+    };
+
+    DOM.header.btnEsci.onclick = esciDaFirebase;
+    DOM.header.btnEsciMobile.onclick = esciDaFirebase;
 
     autenticazioneFirebase.onAuthStateChanged(utente => {
 

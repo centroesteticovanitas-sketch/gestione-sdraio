@@ -142,12 +142,6 @@ function collegaEventi() {
 
     });
 
-    DOM.header.btnEsciMobile.addEventListener("click", () => {
-
-        nascondi(DOM.header.menuMobile);
-
-    });
-
     DOM.header.btnDataPrecedente.addEventListener(
 
         "click",
