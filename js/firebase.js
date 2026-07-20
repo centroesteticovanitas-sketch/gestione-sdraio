@@ -16,6 +16,16 @@ let sincronizzazioneFirebaseAttiva = false;
 let interrompiAscoltoPrenotazioni = null;
 let primoCaricamentoFirebase = true;
 let ultimoSalvataggioFirebase = Promise.resolve();
+const uscitaFirebaseRichiesta = new URLSearchParams(window.location.search)
+    .get("logout") === "1";
+
+if (uscitaFirebaseRichiesta) {
+
+    autenticazioneFirebase.signOut()
+        .catch(errore => console.error("Logout Firebase non riuscito.", errore))
+        .finally(() => window.history.replaceState({}, "", "index.html"));
+
+}
 
 function ruoloFirebaseCorrente() {
 
@@ -80,32 +90,18 @@ function inizializzaAccessoFirebase() {
 
     };
 
-    const mostraAccessoSubito = () => {
-
-        document.body.classList.remove("collaboratore");
-        document.body.classList.add("non-autenticato");
-        nascondi(DOM.header.menuMobile);
-        mostra(DOM.modal.accesso);
-
-    };
-
-    const esciDaFirebase = evento => {
-
-        evento?.preventDefault();
-        mostraAccessoSubito();
-
-        autenticazioneFirebase.signOut().catch(erroreUscita => {
-
-            console.error("Impossibile effettuare il logout:", erroreUscita);
-
-        });
-
-    };
-
-    DOM.header.btnEsci.onclick = esciDaFirebase;
-    DOM.header.btnEsciMobile.onclick = esciDaFirebase;
-
     autenticazioneFirebase.onAuthStateChanged(utente => {
+
+        if (uscitaFirebaseRichiesta) {
+
+            document.body.classList.remove("collaboratore");
+            document.body.classList.add("non-autenticato");
+            nascondi(DOM.header.menuMobile);
+            mostra(DOM.modal.accesso);
+
+            return;
+
+        }
 
         if (!utente) {
 
