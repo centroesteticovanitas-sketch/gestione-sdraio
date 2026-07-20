@@ -224,6 +224,17 @@ function collegaEventi() {
 
     );
 
+    DOM.form.telefono.addEventListener("keydown", evento => {
+
+        if (evento.key === "Enter") {
+
+            evento.preventDefault();
+            DOM.form.telefono.blur();
+
+        }
+
+    });
+
     const cambiaNumeroSdraie = variazione => {
 
         const minimo = Number(DOM.form.numero.min) || 1;
