@@ -200,12 +200,10 @@ function avviaSincronizzazioneFirebase() {
 
 async function salvaArchivioFirebase(prenotazioni) {
 
-    if (!sincronizzazioneFirebaseAttiva) return;
+    if (!utenteFirebaseAutenticato()) return;
 
     try {
 
-        const esistenti = await archivioFirebase.collection("prenotazioni").get();
-        const identificativi = new Set(prenotazioni.map(prenotazione => prenotazione.id));
         const batch = archivioFirebase.batch();
 
         prenotazioni.forEach(prenotazione => {
@@ -217,16 +215,6 @@ async function salvaArchivioFirebase(prenotazioni) {
 
         });
 
-        if (utenteFirebaseAmministratore()) {
-
-            esistenti.docs.forEach(documento => {
-
-                if (!identificativi.has(documento.id)) batch.delete(documento.ref);
-
-            });
-
-        }
-
         await batch.commit();
 
     }
@@ -234,6 +222,24 @@ async function salvaArchivioFirebase(prenotazioni) {
 
         console.error("Salvataggio Firebase non riuscito.", errore);
         avviso("Il salvataggio online non è riuscito.");
+
+    }
+
+}
+
+async function eliminaPrenotazioneFirebase(id) {
+
+    if (!utenteFirebaseAutenticato() || !utenteFirebaseAmministratore()) return;
+
+    try {
+
+        await archivioFirebase.collection("prenotazioni").doc(id).delete();
+
+    }
+    catch (errore) {
+
+        console.error("Eliminazione Firebase non riuscita.", errore);
+        avviso("L'eliminazione online non è riuscita.");
 
     }
 

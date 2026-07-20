@@ -22,11 +22,7 @@ function salvaArchivio() {
     // Copia di sicurezza durante l'avvio o in caso di rete momentaneamente assente.
     localStorage.setItem(CHIAVE_ARCHIVIO, JSON.stringify(Stato.prenotazioni));
 
-    if (sincronizzazioneFirebaseAttiva) {
-
-        salvaArchivioFirebase(Stato.prenotazioni);
-
-    }
+    salvaArchivioFirebase(Stato.prenotazioni);
 
 }
 
@@ -90,7 +86,13 @@ function eliminaPrenotazione(prenotazione) {
 
     }
 
-    salvaArchivio();
+    if (utenteFirebaseAutenticato()) {
+
+        localStorage.setItem(CHIAVE_ARCHIVIO, JSON.stringify(Stato.prenotazioni));
+
+    }
+
+    eliminaPrenotazioneFirebase(prenotazione.id);
     ridisegnaSdraie();
 
 }
