@@ -283,13 +283,17 @@
 
                 </label>
 
-                <input
-                    id="txtNumero"
-                    type="number"
-                    value="2"
-                    min="1"
-                    max="25"
-                    inputmode="numeric">
+                <div class="number-stepper" aria-label="Numero sdraie">
+                    <button id="btnNumeroMeno" type="button" aria-label="Diminuisci sdraie">−</button>
+                    <input
+                        id="txtNumero"
+                        type="number"
+                        value="2"
+                        min="1"
+                        max="25"
+                        inputmode="numeric">
+                    <button id="btnNumeroPiu" type="button" aria-label="Aumenta sdraie">+</button>
+                </div>
 
                 <div
                     id="errNumero"
