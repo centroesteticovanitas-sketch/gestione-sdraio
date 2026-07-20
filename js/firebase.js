@@ -88,12 +88,6 @@ function inizializzaAccessoFirebase() {
 
             await autenticazioneFirebase.signOut();
 
-            // Risposta immediata anche se l'evento Firebase arriva con ritardo.
-            document.body.classList.remove("collaboratore");
-            document.body.classList.add("non-autenticato");
-            nascondi(DOM.header.menuMobile);
-            mostra(DOM.modal.accesso);
-
         }
         catch (erroreUscita) {
 
