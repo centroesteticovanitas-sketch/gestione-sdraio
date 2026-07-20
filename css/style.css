@@ -776,7 +776,7 @@ body.non-autenticato header,
 body.non-autenticato main,
 body.non-autenticato #scheda{
 
-    visibility:hidden;
+    display:none !important;
 
 }
 
