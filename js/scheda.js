@@ -327,10 +327,21 @@ async function creaEInviaLinkSumup(prenotazione) {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ prenotazioneId: prenotazione.id })
+                body: JSON.stringify({
+                    prenotazioneId: prenotazione.id,
+                    prenotazione
+                })
             }
         );
-        const risultato = await risposta.json();
+        const testoRisposta = await risposta.text();
+        let risultato = {};
+
+        try {
+            risultato = JSON.parse(testoRisposta);
+        }
+        catch {
+            throw new Error("Il servizio SumUp ha restituito un errore inatteso.");
+        }
 
         if (!risposta.ok) throw new Error(risultato.errore || "Errore SumUp.");
 
