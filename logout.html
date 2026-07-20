@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Uscita in corso</title>
+    <style>
+        body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f3f7f4;color:#234;font-family:Arial,sans-serif;text-align:center;padding:24px;}
+        p{font-size:18px;}
+        a{color:#1976d2;}
+    </style>
+</head>
+<body>
+    <p id="messaggio">Uscita in corso...</p>
+    <script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script>
+        firebase.initializeApp(FIREBASE_CONFIG);
+        firebase.auth().signOut()
+            .then(() => window.location.replace("index.html"))
+            .catch(() => {
+                document.getElementById("messaggio").innerHTML =
+                    'Non riesco a chiudere la sessione. <a href="index.html">Torna all\'app</a>';
+            });
+    </script>
+</body>
+</html>
