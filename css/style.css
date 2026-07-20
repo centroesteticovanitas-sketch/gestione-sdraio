@@ -640,6 +640,24 @@ main{
 
 }
 
+#btnEsci{
+
+    min-height:36px;
+
+    padding:8px 12px;
+
+    border:1px solid #9e9e9e;
+
+    border-radius:8px;
+
+    background:white;
+
+    color:#555;
+
+    cursor:pointer;
+
+}
+
 .badge-incassi{
 
     display:inline-flex;
@@ -665,6 +683,73 @@ main{
     font-size:12px;
 
     font-weight:bold;
+
+}
+
+.modal-accesso{
+
+    width:400px;
+
+    text-align:left;
+
+}
+
+.modal-accesso h2{
+
+    margin-bottom:10px;
+
+}
+
+.btn-accesso{
+
+    width:100%;
+
+    min-height:48px;
+
+    margin-top:20px;
+
+    border:0;
+
+    border-radius:8px;
+
+    background:#2c7a3f;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+}
+
+.btn-link{
+
+    width:100%;
+
+    margin-top:12px;
+
+    border:0;
+
+    background:transparent;
+
+    color:#1976d2;
+
+    text-decoration:underline;
+
+    cursor:pointer;
+
+}
+
+body.collaboratore #btnPrenota,
+body.collaboratore #btnTariffe,
+body.collaboratore #btnStatistiche,
+body.collaboratore #btnModifica,
+body.collaboratore #btnPostazioni,
+body.collaboratore #btnElimina{
+
+    display:none;
 
 }
 
@@ -1129,6 +1214,7 @@ main{
     #btnStatistiche,
     #btnTariffe,
     #btnIncassi,
+    #btnEsci,
     #barraStato{
 
         grid-column:1 / -1;
@@ -1141,7 +1227,8 @@ main{
     #btnPrenota,
     #btnStatistiche,
     #btnTariffe,
-    #btnIncassi{
+    #btnIncassi,
+    #btnEsci{
 
         min-height:48px;
 
@@ -1706,7 +1793,8 @@ main{
     #btnPrenota,
     #btnStatistiche,
     #btnTariffe,
-    #btnIncassi{
+    #btnIncassi,
+    #btnEsci{
 
         height:40px;
 

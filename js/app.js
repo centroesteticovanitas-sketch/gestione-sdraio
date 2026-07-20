@@ -40,6 +40,8 @@ function inizializzaApplicazione() {
 
     chiudiScheda();
 
+    inizializzaAccessoFirebase();
+
 }
 
 /* ============================================================

@@ -41,6 +41,9 @@ const DOM = {
         badgeIncassi:
             document.getElementById("badgeIncassi"),
 
+        btnEsci:
+            document.getElementById("btnEsci"),
+
         barraStato:
             document.getElementById("barraStato"),
 
@@ -147,6 +150,9 @@ const DOM = {
 
         prenotazione:
             document.getElementById("modalPrenotazione"),
+
+        accesso:
+            document.getElementById("modalAccesso"),
 
         pagamento:
             document.getElementById("modalPagamento"),

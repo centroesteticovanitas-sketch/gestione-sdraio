@@ -16,6 +16,12 @@ function prenotazioniDelGiorno(data = DOM.header.data.value) {
 
 function salvaArchivio() {
 
+    if (sincronizzazioneFirebaseAttiva) {
+
+        salvaArchivioFirebase(Stato.prenotazioni);
+
+    }
+
     localStorage.setItem(CHIAVE_ARCHIVIO, JSON.stringify(Stato.prenotazioni));
 
 }
