@@ -86,13 +86,6 @@ function inizializzaAccessoFirebase() {
 
         try {
 
-            // Non interrompere una prenotazione appena inserita mentre sta
-            // ancora raggiungendo Firebase.
-            await Promise.race([
-                ultimoSalvataggioFirebase,
-                new Promise(resolve => setTimeout(resolve, 3000))
-            ]);
-
             await autenticazioneFirebase.signOut();
 
             // Risposta immediata anche se l'evento Firebase arriva con ritardo.
