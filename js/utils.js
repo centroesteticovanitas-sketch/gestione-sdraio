@@ -99,11 +99,15 @@ const COLORI = [
 function prossimoColore(data) {
 
     const coloriUsati = typeof prenotazioniDelGiorno === "function"
-        ? new Set(prenotazioniDelGiorno(data).map(p => p.colore))
+        ? new Set(
+            prenotazioniDelGiorno(data)
+                .map(p => String(p.colore || "").trim().toUpperCase())
+                .filter(Boolean)
+        )
         : new Set();
 
-    const colore = COLORI.find(c => !coloriUsati.has(c)) ??
-        COLORI[Stato.indiceColore];
+    const colore = COLORI.find(c => !coloriUsati.has(c.toUpperCase())) ??
+        COLORI[Stato.indiceColore % COLORI.length];
 
     Stato.indiceColore++;
 
@@ -114,6 +118,44 @@ function prossimoColore(data) {
     }
 
     return colore;
+
+}
+
+// Corregge eventuali colori ripetuti nelle prenotazioni dello stesso giorno.
+// Restituisce true solo se ha apportato una modifica.
+function normalizzaColoriPrenotazioni(prenotazioni) {
+
+    const coloriPerData = new Map();
+    let modificato = false;
+
+    for (const prenotazione of prenotazioni) {
+
+        const data = prenotazione.data || "";
+        const usati = coloriPerData.get(data) || new Set();
+        const colore = String(prenotazione.colore || "").trim().toUpperCase();
+
+        if (!colore || usati.has(colore)) {
+
+            const nuovoColore = COLORI.find(c => !usati.has(c.toUpperCase()));
+
+            if (nuovoColore) {
+
+                prenotazione.colore = nuovoColore;
+                usati.add(nuovoColore.toUpperCase());
+                modificato = true;
+                coloriPerData.set(data, usati);
+                continue;
+
+            }
+
+        }
+
+        usati.add(colore);
+        coloriPerData.set(data, usati);
+
+    }
+
+    return modificato;
 
 }
 

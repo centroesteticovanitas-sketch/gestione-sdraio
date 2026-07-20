@@ -185,6 +185,14 @@ function avviaSincronizzazioneFirebase() {
                 creaPrenotazione({ ...documento.data(), id: documento.id })
             );
 
+            const coloriCorretti = normalizzaColoriPrenotazioni(Stato.prenotazioni);
+
+            if (coloriCorretti && utenteFirebaseAmministratore()) {
+
+                salvaArchivioFirebase(Stato.prenotazioni);
+
+            }
+
             ridisegnaSdraie();
 
             if (gestioneIncassiAperta) aggiornaListaIncassi();
