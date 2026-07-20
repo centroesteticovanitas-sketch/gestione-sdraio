@@ -130,7 +130,6 @@ function collegaEventi() {
     DOM.header.btnEsciMobile.addEventListener("click", () => {
 
         nascondi(DOM.header.menuMobile);
-        DOM.header.btnEsci.click();
 
     });
 
@@ -338,6 +337,8 @@ function cambiaDataRapidamente(giorni) {
 }
 
 function nuovaPrenotazione() {
+
+    if (!richiediAccessoFirebase()) return;
 
     if (Stato.modalita === Modalita.NUOVA_PRENOTAZIONE) {
 

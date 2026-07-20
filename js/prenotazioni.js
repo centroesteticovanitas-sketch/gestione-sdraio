@@ -16,13 +16,17 @@ function prenotazioniDelGiorno(data = DOM.header.data.value) {
 
 function salvaArchivio() {
 
+    // Senza accesso non conserviamo né modifichiamo alcuna prenotazione.
+    if (!utenteFirebaseAutenticato()) return;
+
+    // Copia di sicurezza durante l'avvio o in caso di rete momentaneamente assente.
+    localStorage.setItem(CHIAVE_ARCHIVIO, JSON.stringify(Stato.prenotazioni));
+
     if (sincronizzazioneFirebaseAttiva) {
 
         salvaArchivioFirebase(Stato.prenotazioni);
 
     }
-
-    localStorage.setItem(CHIAVE_ARCHIVIO, JSON.stringify(Stato.prenotazioni));
 
 }
 
@@ -104,7 +108,13 @@ function numeroPrenotazioni() {
 
 function trovaPrenotazioneDaSdraia(id) {
 
-    return Stato.mappaSdraie.get(id)?.prenotazione ?? null;
+    const prenotazioneMappa = Stato.mappaSdraie.get(id)?.prenotazione;
+
+    if (prenotazioneMappa) return prenotazioneMappa;
+
+    return prenotazioniDelGiorno().find(
+        prenotazione => prenotazione.sdraie.includes(id)
+    ) ?? null;
 
 }
 
@@ -485,7 +495,20 @@ function selezionaSdraia(id) {
 
     if (Stato.sdraieSelezionate.length === numeroRichiesto) {
 
-        salvaSceltaNuovaPrenotazione();
+        DOM.mappa.scheda.innerHTML =
+            `Sdraie selezionate: ${numeroRichiesto} di ${numeroRichiesto}.`;
+
+        if (Stato.salvataggioSelezioneInCorso) return;
+
+        Stato.salvataggioSelezioneInCorso = true;
+
+        setTimeout(() => {
+
+            Stato.salvataggioSelezioneInCorso = false;
+            salvaSceltaNuovaPrenotazione();
+
+        // Lascia visibile il conteggio finale prima del salvataggio automatico.
+        }, 700);
 
         return;
 
@@ -620,8 +643,11 @@ function salvaSceltaNuovaPrenotazione() {
 
     Stato.sdraieSelezionate = [];
     Stato.numeroSdraieRichiesto = 0;
+    Stato.salvataggioSelezioneInCorso = false;
     Stato.modalita = Modalita.NORMALE;
     Stato.coloreSelezione = null;
+
+    DOM.header.btnPrenota.textContent = "➕ Prenotazione";
 
     aggiungiPrenotazione(prenotazione);
     rimuoviEvidenziazione();
@@ -655,6 +681,9 @@ function iniziaSceltaSdraie() {
     DOM.header.btnPrenota.textContent = "Annulla selezione";
     DOM.mappa.scheda.innerHTML =
         `Seleziona ${DOM.form.numero.value} sdraie sulla planimetria: la prenotazione verrà salvata automaticamente.`;
+
+    DOM.mappa.scheda.innerHTML =
+        `Sdraie selezionate: 0 di ${DOM.form.numero.value}.`;
 
     DOM.mappa.scheda.classList.add("selezione-attiva");
 
@@ -940,6 +969,7 @@ function annullaPrenotazione() {
 
     Stato.sdraieSelezionate = [];
     Stato.numeroSdraieRichiesto = 0;
+    Stato.salvataggioSelezioneInCorso = false;
     Stato.coloreSelezione = null;
 
     Stato.prenotazioneInModifica = null;

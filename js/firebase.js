@@ -30,6 +30,22 @@ function utenteFirebaseAmministratore() {
 
 }
 
+function utenteFirebaseAutenticato() {
+
+    return Boolean(autenticazioneFirebase.currentUser);
+
+}
+
+function richiediAccessoFirebase() {
+
+    if (utenteFirebaseAutenticato()) return true;
+
+    mostra(DOM.modal.accesso);
+
+    return false;
+
+}
+
 function inizializzaAccessoFirebase() {
 
     const email = document.getElementById("txtEmailAccesso");
@@ -63,7 +79,32 @@ function inizializzaAccessoFirebase() {
 
     };
 
-    DOM.header.btnEsci.onclick = () => autenticazioneFirebase.signOut();
+    const esciDaFirebase = async evento => {
+
+        evento?.preventDefault();
+
+        try {
+
+            await autenticazioneFirebase.signOut();
+
+            // Risposta immediata anche se l'evento Firebase arriva con ritardo.
+            document.body.classList.remove("collaboratore");
+            document.body.classList.add("non-autenticato");
+            nascondi(DOM.header.menuMobile);
+            mostra(DOM.modal.accesso);
+
+        }
+        catch (erroreUscita) {
+
+            console.error("Impossibile effettuare il logout:", erroreUscita);
+            alert("Non è stato possibile uscire. Riprova tra qualche secondo.");
+
+        }
+
+    };
+
+    DOM.header.btnEsci.addEventListener("click", esciDaFirebase);
+    DOM.header.btnEsciMobile.addEventListener("click", esciDaFirebase);
 
     autenticazioneFirebase.onAuthStateChanged(utente => {
 
@@ -79,6 +120,9 @@ function inizializzaAccessoFirebase() {
             }
 
             document.body.classList.remove("collaboratore");
+            document.body.classList.add("non-autenticato");
+
+            nascondi(DOM.header.menuMobile);
 
             mostra(DOM.modal.accesso);
 
@@ -86,6 +130,7 @@ function inizializzaAccessoFirebase() {
 
         }
 
+        document.body.classList.remove("non-autenticato");
         nascondi(DOM.modal.accesso);
         applicaPermessiFirebase();
         avviaSincronizzazioneFirebase();

@@ -126,6 +126,8 @@ function creaSdraie() {
 
 function clickSdraia(id) {
 
+    if (!richiediAccessoFirebase()) return;
+
     switch (Stato.modalita) {
 
         case Modalita.NUOVA_PRENOTAZIONE:

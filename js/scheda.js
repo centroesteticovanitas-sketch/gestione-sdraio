@@ -11,6 +11,8 @@
 
 function mostraScheda(id) {
 
+    DOM.mappa.scheda.classList.remove("selezione-attiva");
+
     if (Stato.schedaAperta === id) {
 
         chiudiScheda();
@@ -67,6 +69,8 @@ function mostraScheda(id) {
  * ============================================================ */
 
 function chiudiScheda() {
+
+    DOM.mappa.scheda.classList.remove("selezione-attiva");
 
     Stato.schedaAperta = null;
 

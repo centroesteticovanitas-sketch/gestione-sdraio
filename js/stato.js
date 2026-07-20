@@ -51,6 +51,8 @@ const Stato = {
 
     numeroSdraieRichiesto: 0,
 
+    salvataggioSelezioneInCorso: false,
+
     coloreSelezione: null,
 
     sdraieModificate: [],
@@ -92,6 +94,8 @@ const Stato = {
         this.sdraieSelezionate = [];
 
         this.numeroSdraieRichiesto = 0;
+
+        this.salvataggioSelezioneInCorso = false;
 
         this.coloreSelezione = null;
 

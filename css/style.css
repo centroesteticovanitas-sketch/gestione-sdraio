@@ -240,6 +240,12 @@ main{
 
 }
 
+#scheda.selezione-attiva{
+
+    pointer-events:none;
+
+}
+
 /* ================= SMARTPHONE ================= */
 
 @media(max-width:700px){
@@ -753,6 +759,14 @@ body.collaboratore #btnElimina{
 
 }
 
+body.non-autenticato header,
+body.non-autenticato main,
+body.non-autenticato #scheda{
+
+    visibility:hidden;
+
+}
+
 #btnAnnullaTariffe{
 
     background:#9e9e9e;
@@ -1225,7 +1239,7 @@ body.collaboratore #btnElimina{
 
     body.collaboratore #btnPrenotaMobile{display:none;}
     body.collaboratore .azioni-rapide-mobile{grid-template-columns:1fr;left:25%;right:25%;}
-    body.collaboratore #btnTariffeMobile,body.collaboratore #btnStatisticheMobile,body.collaboratore #btnEsciMobile{display:none;}
+    body.collaboratore #btnTariffeMobile,body.collaboratore #btnStatisticheMobile{display:none;}
 
 }
 
@@ -1513,8 +1527,7 @@ body.collaboratore #btnElimina{
     }
 
     body.collaboratore #btnTariffeMobile,
-    body.collaboratore #btnStatisticheMobile,
-    body.collaboratore #btnEsciMobile{
+    body.collaboratore #btnStatisticheMobile{
 
         display:none;
 
@@ -2256,10 +2269,10 @@ body.collaboratore #btnElimina{
     #btnIncassiMobile{background:#7b1fa2;}
     body.collaboratore #btnPrenotaMobile{display:none;}
     body.collaboratore .azioni-rapide-mobile{grid-template-columns:1fr;left:25%;right:25%;}
-    body.collaboratore #btnTariffeMobile,body.collaboratore #btnStatisticheMobile,body.collaboratore #btnEsciMobile{display:none;}
+    body.collaboratore #btnTariffeMobile,body.collaboratore #btnStatisticheMobile{display:none;}
 }
 
 @media(max-width:700px){
     #scheda{min-height:48px;padding:10px 12px;line-height:1.35;}
-    #scheda.selezione-attiva{display:none;}
+    #scheda.selezione-attiva{pointer-events:none;}
 }
