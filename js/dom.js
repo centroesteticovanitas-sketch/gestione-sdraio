@@ -126,6 +126,12 @@ const DOM = {
         numero:
             document.getElementById("txtNumero"),
 
+        btnNumeroMeno:
+            document.getElementById("btnNumeroMeno"),
+
+        btnNumeroPiu:
+            document.getElementById("btnNumeroPiu"),
+
         data:
             document.getElementById("txtData"),
 

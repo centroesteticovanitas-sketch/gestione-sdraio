@@ -282,7 +282,7 @@ function creaHtmlContatti(prenotazione) {
         numeroWhatsApp = "39" + numeroWhatsApp;
     }
 
-    const messaggio = [
+    let messaggio = [
         `Ciao ${prenotazione.cognome},`,
         "ecco il riepilogo della tua prenotazione:",
         `Data: ${formattaData(prenotazione.data)}`,
@@ -292,9 +292,43 @@ function creaHtmlContatti(prenotazione) {
         `Saldo: ${euro(prenotazione.saldo)} €`
     ].join("\n");
 
+    messaggio = [
+        `Ciao ${prenotazione.cognome},`,
+        "ecco il riepilogo della tua prenotazione:",
+        `Data: ${formattaData(prenotazione.data)}`,
+        `Numero postazioni: ${prenotazione.numero}`,
+        `Totale: ${euro(prenotazione.totale)} €`,
+        "",
+        "🌊 REGOLAMENTO PRENOTAZIONE PISCINA - AMURUSU 🌞",
+        "🕘 Orari di apertura: 9:00 - 18:30",
+        "❗️Non si effettuano tariffe per mezza giornata.",
+        "",
+        "📌 Regole da rispettare:",
+        "- Non è consentito introdurre bevande: all’interno è presente un bar attrezzato.",
+        "- È possibile utilizzare il barbecue messo a disposizione per i clienti.",
+        "- Vietato fare tuffi.",
+        "- Doccia obbligatoria prima di entrare in piscina.",
+        "- I bambini devono essere sempre sorvegliati da un adulto, non sono ammessi bambini di età inferiore a 5 anni.",
+        "",
+        "✅ Con il pagamento anticipato confermi di accettare il regolamento.",
+        "",
+        "Grazie e buona giornata! ☀️"
+    ].join("\n");
+
+    // Il WhatsApp normale è soltanto un promemoria: regolamento e pagamento
+    // vengono inviati insieme dal pulsante SumUp.
+    messaggio = [
+        `Ciao ${prenotazione.cognome},`,
+        "ecco un promemoria della tua prenotazione:",
+        `Data: ${formattaData(prenotazione.data)}`,
+        `Numero postazioni: ${prenotazione.numero}`,
+        `Totale: ${euro(prenotazione.totale)} €`,
+        "Grazie e buona giornata! ☀️"
+    ].join("\n");
+
     const azioneSumup = utenteFirebaseAmministratore() ? `
         <button id="btnLinkSumup" type="button" class="btn-contatto btn-sumup">
-            Invia link SumUp
+            Prenotazione + SumUp
         </button>
     ` : "";
 
@@ -302,7 +336,7 @@ function creaHtmlContatti(prenotazione) {
 
         <div class="scheda-contatti">
             <a class="btn-contatto btn-chiama" href="tel:${numeroTelefono}">📞 Chiama</a>
-            <a class="btn-contatto btn-whatsapp" href="https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(messaggio)}" target="_blank" rel="noopener">WhatsApp</a>
+            <a class="btn-contatto btn-whatsapp" href="https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(messaggio)}" target="_blank" rel="noopener">Promemoria WhatsApp</a>
             ${azioneSumup}
         </div>
 
@@ -355,11 +389,37 @@ async function creaEInviaLinkSumup(prenotazione) {
 
         if (!numeroWhatsApp) throw new Error("Numero WhatsApp non valido.");
 
-        const messaggio = [
+        let messaggio = [
             `Ciao ${prenotazione.cognome},`,
             `per la prenotazione del ${formattaData(prenotazione.data)} puoi effettuare il pagamento di ${euro(prenotazione.totale)} € tramite SumUp:`,
             link,
             "Grazie!"
+        ].join("\n");
+
+        messaggio = [
+            `Ciao ${prenotazione.cognome},`,
+            "ecco il riepilogo della tua prenotazione:",
+            `Data: ${formattaData(prenotazione.data)}`,
+            `Numero postazioni: ${prenotazione.numero}`,
+            `Totale: ${euro(prenotazione.totale)} €`,
+            "",
+            "🌊 REGOLAMENTO PRENOTAZIONE PISCINA - AMURUSU 🌞",
+            "🕘 Orari di apertura: 9:00 - 18:30",
+            "❗️Non si effettuano tariffe per mezza giornata.",
+            "",
+            "📌 Regole da rispettare:",
+            "- Non è consentito introdurre bevande: all’interno è presente un bar attrezzato.",
+            "- È possibile utilizzare il barbecue messo a disposizione per i clienti.",
+            "- Vietato fare tuffi.",
+            "- Doccia obbligatoria prima di entrare in piscina.",
+            "- I bambini devono essere sempre sorvegliati da un adulto, non sono ammessi bambini di età inferiore a 5 anni.",
+            "",
+            `💳 Per confermare la prenotazione effettua il pagamento di ${euro(prenotazione.totale)} € tramite SumUp:`,
+            link,
+            "",
+            "✅ Con il pagamento anticipato confermi di accettare il regolamento.",
+            "",
+            "Grazie e buona giornata! ☀️"
         ].join("\n");
 
         window.location.href =

@@ -54,6 +54,19 @@ function mostraStatistiche(periodo = "giorno") {
 
     Stato.schedaAperta = null;
 
+    const oggi = oggiISO();
+    const fineProssimiGiorni = new Date(`${oggi}T00:00:00`);
+    fineProssimiGiorni.setDate(fineProssimiGiorni.getDate() + 9);
+    const prossimePrenotazioni = Stato.prenotazioni
+        .filter(prenotazione =>
+            prenotazione.data >= oggi &&
+            prenotazione.data <= dataISO(fineProssimiGiorni)
+        )
+        .sort((a, b) =>
+            a.data.localeCompare(b.data) ||
+            a.cognome.localeCompare(b.cognome)
+        );
+
     DOM.mappa.scheda.innerHTML = `
 
         <div class="scheda-statistiche">
@@ -79,6 +92,22 @@ function mostraStatistiche(periodo = "giorno") {
         </div>
 
     `;
+
+    DOM.mappa.scheda.querySelector(".scheda-statistiche").insertAdjacentHTML(
+        "beforeend",
+        `
+            <div class="riepilogo-prossime-prenotazioni">
+                <h3>Prossime prenotazioni (10 giorni)</h3>
+                ${prossimePrenotazioni.length ? prossimePrenotazioni.map(prenotazione => `
+                    <div class="riga-prossima-prenotazione">
+                        <strong>${formattaData(prenotazione.data)}</strong>
+                        <span>${prenotazione.cognome} · ${prenotazione.numero} postazioni</span>
+                        <span>${euro(prenotazione.totale)} €</span>
+                    </div>
+                `).join("") : "<p>Nessuna prenotazione nei prossimi 10 giorni.</p>"}
+            </div>
+        `
+    );
 
     document.getElementById("btnChiudiStatistiche").onclick = chiudiScheda;
 

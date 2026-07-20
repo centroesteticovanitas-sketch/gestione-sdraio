@@ -224,6 +224,20 @@ function collegaEventi() {
 
     );
 
+    const cambiaNumeroSdraie = variazione => {
+
+        const minimo = Number(DOM.form.numero.min) || 1;
+        const massimo = Number(DOM.form.numero.max) || 25;
+        const attuale = intero(DOM.form.numero.value) || minimo;
+
+        DOM.form.numero.value = Math.min(massimo, Math.max(minimo, attuale + variazione));
+        aggiornaTotale();
+
+    };
+
+    DOM.form.btnNumeroMeno.addEventListener("click", () => cambiaNumeroSdraie(-1));
+    DOM.form.btnNumeroPiu.addEventListener("click", () => cambiaNumeroSdraie(1));
+
     DOM.form.prezzo.addEventListener(
 
         "input",
