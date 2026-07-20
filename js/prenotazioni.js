@@ -14,7 +14,7 @@ function prenotazioniDelGiorno(data = DOM.header.data.value) {
 
 }
 
-function salvaArchivio() {
+function salvaArchivio(prenotazioniDaSalvare = Stato.prenotazioni) {
 
     // Senza accesso non conserviamo né modifichiamo alcuna prenotazione.
     if (!utenteFirebaseAutenticato()) return;
@@ -22,7 +22,7 @@ function salvaArchivio() {
     // Copia di sicurezza durante l'avvio o in caso di rete momentaneamente assente.
     localStorage.setItem(CHIAVE_ARCHIVIO, JSON.stringify(Stato.prenotazioni));
 
-    salvaArchivioFirebase(Stato.prenotazioni);
+    salvaArchivioFirebase(prenotazioniDaSalvare);
 
 }
 
@@ -71,7 +71,9 @@ function aggiungiPrenotazione(prenotazione) {
 
     ordinaPrenotazioni();
 
-    salvaArchivio();
+    // Una nuova prenotazione viene inviata subito da sola: non dipende dal
+    // salvataggio delle altre prenotazioni presenti nell'archivio.
+    salvaArchivio([prenotazione]);
     ridisegnaSdraie();
 
 }

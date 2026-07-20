@@ -15,6 +15,7 @@ const funzioniFirebase = firebase.functions("europe-west1");
 let sincronizzazioneFirebaseAttiva = false;
 let interrompiAscoltoPrenotazioni = null;
 let primoCaricamentoFirebase = true;
+let ultimoSalvataggioFirebase = Promise.resolve();
 
 function ruoloFirebaseCorrente() {
 
@@ -84,6 +85,13 @@ function inizializzaAccessoFirebase() {
         evento?.preventDefault();
 
         try {
+
+            // Non interrompere una prenotazione appena inserita mentre sta
+            // ancora raggiungendo Firebase.
+            await Promise.race([
+                ultimoSalvataggioFirebase,
+                new Promise(resolve => setTimeout(resolve, 3000))
+            ]);
 
             await autenticazioneFirebase.signOut();
 
@@ -165,6 +173,20 @@ function avviaSincronizzazioneFirebase() {
         .collection("prenotazioni")
         .onSnapshot(snapshot => {
 
+            // Firebase puÃ² fornire per prima una cache locale ancora vuota.
+            // In quel caso manteniamo i dati visibili finchÃ© non arriva la
+            // risposta effettiva dal server.
+            if (
+                primoCaricamentoFirebase &&
+                snapshot.empty &&
+                snapshot.metadata.fromCache &&
+                Stato.prenotazioni.length
+            ) {
+
+                return;
+
+            }
+
             if (
                 primoCaricamentoFirebase &&
                 snapshot.empty &&
@@ -210,15 +232,21 @@ async function salvaArchivioFirebase(prenotazioni) {
 
     if (!utenteFirebaseAutenticato()) return;
 
+    const operazione = Promise.all(
+        prenotazioni.map(prenotazione =>
+            archivioFirebase.collection("prenotazioni")
+                .doc(prenotazione.id)
+                .set(JSON.parse(JSON.stringify(prenotazione)))
+        )
+    );
+
+    // Il logout attende questa promessa: cosÃ¬ una prenotazione appena
+    // confermata non puÃ² andare persa uscendo subito dall'app.
+    ultimoSalvataggioFirebase = operazione.catch(() => undefined);
+
     try {
 
-        await Promise.all(
-            prenotazioni.map(prenotazione =>
-                archivioFirebase.collection("prenotazioni")
-                    .doc(prenotazione.id)
-                    .set(JSON.parse(JSON.stringify(prenotazione)))
-            )
-        );
+        await operazione;
 
     }
     catch (errore) {
