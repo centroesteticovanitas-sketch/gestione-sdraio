@@ -286,7 +286,7 @@ function creaHtmlContatti(prenotazione) {
         `Ciao ${prenotazione.cognome},`,
         "ecco il riepilogo della tua prenotazione:",
         `Data: ${formattaData(prenotazione.data)}`,
-        `Numero postazioni: ${prenotazione.numero}`,
+        `Postazioni prenotate: ${prenotazione.numero} sdraie`,
         `Totale: ${euro(prenotazione.totale)} €`,
         `Acconto: ${euro(prenotazione.acconto)} €`,
         `Saldo: ${euro(prenotazione.saldo)} €`
@@ -296,7 +296,7 @@ function creaHtmlContatti(prenotazione) {
         `Ciao ${prenotazione.cognome},`,
         "ecco il riepilogo della tua prenotazione:",
         `Data: ${formattaData(prenotazione.data)}`,
-        `Numero postazioni: ${prenotazione.numero}`,
+        `Postazioni prenotate: ${prenotazione.numero} sdraie`,
         `Totale: ${euro(prenotazione.totale)} €`,
         "",
         "🌊 REGOLAMENTO PRENOTAZIONE PISCINA - AMURUSU 🌞",
@@ -321,7 +321,7 @@ function creaHtmlContatti(prenotazione) {
         `Ciao ${prenotazione.cognome},`,
         "ecco un promemoria della tua prenotazione:",
         `Data: ${formattaData(prenotazione.data)}`,
-        `Numero postazioni: ${prenotazione.numero}`,
+        `Postazioni prenotate: ${prenotazione.numero} sdraie`,
         `Totale: ${euro(prenotazione.totale)} €`,
         "Grazie e buona giornata! ☀️"
     ].join("\n");
@@ -400,7 +400,7 @@ async function creaEInviaLinkSumup(prenotazione) {
             `Ciao ${prenotazione.cognome},`,
             "ecco il riepilogo della tua prenotazione:",
             `Data: ${formattaData(prenotazione.data)}`,
-            `Numero postazioni: ${prenotazione.numero}`,
+        `Postazioni prenotate: ${prenotazione.numero} sdraie`,
             `Totale: ${euro(prenotazione.totale)} €`,
             "",
             "🌊 REGOLAMENTO PRENOTAZIONE PISCINA - AMURUSU 🌞",
