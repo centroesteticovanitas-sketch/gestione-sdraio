@@ -313,8 +313,6 @@ function creaHtmlContatti(prenotazione) {
 async function creaEInviaLinkSumup(prenotazione) {
 
     const pulsante = DOM.scheda.btnLinkSumup;
-    const finestraWhatsApp = window.open("about:blank", "_blank");
-
     pulsante.disabled = true;
     pulsante.textContent = "Creo il link SumUp...";
 
@@ -353,14 +351,13 @@ async function creaEInviaLinkSumup(prenotazione) {
             "Grazie!"
         ].join("\n");
 
-        finestraWhatsApp.location.href =
+        window.location.href =
             `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(messaggio)}`;
 
     }
     catch (errore) {
 
         console.error("Creazione link SumUp non riuscita.", errore);
-        finestraWhatsApp?.close();
         avviso(
             errore.message ||
             "Non è stato possibile creare il link SumUp. Controlla la configurazione SumUp."
