@@ -208,6 +208,16 @@ function collegaEventiScheda(prenotazione) {
 
     DOM.scheda.btnChiudi.onclick = chiudiScheda;
 
+    if (DOM.scheda.btnLinkSumup) {
+
+        DOM.scheda.btnLinkSumup.onclick = () => {
+
+            creaEInviaLinkSumup(prenotazione);
+
+        };
+
+    }
+
     DOM.scheda.btnPagamento.onclick = () => {
 
         registraPagamento(prenotazione);
@@ -278,13 +288,69 @@ function creaHtmlContatti(prenotazione) {
         `Saldo: ${euro(prenotazione.saldo)} €`
     ].join("\n");
 
+    const azioneSumup = utenteFirebaseAmministratore() ? `
+        <button id="btnLinkSumup" type="button" class="btn-contatto btn-sumup">
+            Invia link SumUp
+        </button>
+    ` : "";
+
     return `
 
         <div class="scheda-contatti">
             <a class="btn-contatto btn-chiama" href="tel:${numeroTelefono}">📞 Chiama</a>
             <a class="btn-contatto btn-whatsapp" href="https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(messaggio)}" target="_blank" rel="noopener">WhatsApp</a>
+            ${azioneSumup}
         </div>
 
     `;
+
+}
+
+async function creaEInviaLinkSumup(prenotazione) {
+
+    const pulsante = DOM.scheda.btnLinkSumup;
+    const finestraWhatsApp = window.open("about:blank", "_blank");
+
+    pulsante.disabled = true;
+    pulsante.textContent = "Creo il link SumUp...";
+
+    try {
+
+        const creaLink = funzioniFirebase.httpsCallable("creaLinkSumup");
+        const risultato = await creaLink({ prenotazioneId: prenotazione.id });
+        const link = risultato.data?.url;
+
+        if (!link) throw new Error("Link SumUp non ricevuto.");
+
+        const numeroWhatsApp = String(prenotazione.telefono ?? "")
+            .replace(/\D/g, "")
+            .replace(/^00/, "");
+
+        if (!numeroWhatsApp) throw new Error("Numero WhatsApp non valido.");
+
+        const messaggio = [
+            `Ciao ${prenotazione.cognome},`,
+            `per la prenotazione del ${formattaData(prenotazione.data)} puoi effettuare il pagamento di ${euro(prenotazione.totale)} € tramite SumUp:`,
+            link,
+            "Grazie!"
+        ].join("\n");
+
+        finestraWhatsApp.location.href =
+            `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(messaggio)}`;
+
+    }
+    catch (errore) {
+
+        console.error("Creazione link SumUp non riuscita.", errore);
+        finestraWhatsApp?.close();
+        avviso("Non è stato possibile creare il link SumUp. Controlla la configurazione SumUp.");
+
+    }
+    finally {
+
+        pulsante.disabled = false;
+        pulsante.textContent = "Invia link SumUp";
+
+    }
 
 }

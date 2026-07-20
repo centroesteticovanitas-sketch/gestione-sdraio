@@ -93,6 +93,47 @@ function collegaEventi() {
 
     );
 
+    DOM.header.btnPrenotaMobile.addEventListener("click", () => {
+
+        DOM.header.btnPrenota.click();
+
+    });
+
+    DOM.header.btnIncassiMobile.addEventListener("click", () => {
+
+        DOM.header.btnIncassi.click();
+
+    });
+
+    DOM.header.btnMenuMobile.addEventListener("click", () => {
+
+        const aperto = DOM.header.menuMobile.classList.toggle("hidden");
+
+        DOM.header.btnMenuMobile.setAttribute("aria-expanded", String(!aperto));
+
+    });
+
+    DOM.header.btnStatisticheMobile.addEventListener("click", () => {
+
+        nascondi(DOM.header.menuMobile);
+        mostraStatistiche();
+
+    });
+
+    DOM.header.btnTariffeMobile.addEventListener("click", () => {
+
+        nascondi(DOM.header.menuMobile);
+        apriGestioneTariffe();
+
+    });
+
+    DOM.header.btnEsciMobile.addEventListener("click", () => {
+
+        nascondi(DOM.header.menuMobile);
+        DOM.header.btnEsci.click();
+
+    });
+
     DOM.header.btnDataPrecedente.addEventListener(
 
         "click",

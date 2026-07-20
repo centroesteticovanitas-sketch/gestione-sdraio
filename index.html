@@ -114,7 +114,15 @@
 
     </div>
 
+    <button id="btnMenuMobile" class="btn-menu-mobile" type="button" aria-label="Apri menu" aria-expanded="false">☰</button>
+
 </header>
+
+<div id="menuMobile" class="menu-mobile hidden">
+    <button id="btnStatisticheMobile" type="button">📊 Statistiche</button>
+    <button id="btnTariffeMobile" type="button">⚙️ Tariffe</button>
+    <button id="btnEsciMobile" type="button">Esci</button>
+</div>
 
 <main>
 
@@ -137,6 +145,11 @@
 
         </div>
 
+    </div>
+
+    <div class="azioni-rapide-mobile" aria-label="Azioni rapide">
+        <button id="btnPrenotaMobile" type="button">＋ Prenota</button>
+        <button id="btnIncassiMobile" type="button">💶 Incassi <span id="badgeIncassiMobile" class="badge-incassi hidden"></span></button>
     </div>
 
     <div class="controlli-mappa" aria-label="Zoom planimetria">
@@ -593,6 +606,7 @@
 <script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-functions-compat.js"></script>
 
 <script src="js/firebase-config.js"></script>
 

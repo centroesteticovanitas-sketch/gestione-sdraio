@@ -40,6 +40,8 @@ function creaPrenotazione(dati = {}) {
 
         pagamenti: dati.pagamenti ? [...dati.pagamenti] : [],
 
+        sumup: dati.sumup ?? null,
+
         colore: dati.colore ?? prossimoColore(dati.data)
 
     };

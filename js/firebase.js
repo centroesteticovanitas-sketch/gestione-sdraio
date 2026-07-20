@@ -10,6 +10,7 @@ firebase.initializeApp(FIREBASE_CONFIG);
 
 const autenticazioneFirebase = firebase.auth();
 const archivioFirebase = firebase.firestore();
+const funzioniFirebase = firebase.functions("europe-west1");
 
 let sincronizzazioneFirebaseAttiva = false;
 let interrompiAscoltoPrenotazioni = null;

@@ -44,6 +44,30 @@ const DOM = {
         btnEsci:
             document.getElementById("btnEsci"),
 
+        btnMenuMobile:
+            document.getElementById("btnMenuMobile"),
+
+        menuMobile:
+            document.getElementById("menuMobile"),
+
+        btnStatisticheMobile:
+            document.getElementById("btnStatisticheMobile"),
+
+        btnTariffeMobile:
+            document.getElementById("btnTariffeMobile"),
+
+        btnEsciMobile:
+            document.getElementById("btnEsciMobile"),
+
+        btnPrenotaMobile:
+            document.getElementById("btnPrenotaMobile"),
+
+        btnIncassiMobile:
+            document.getElementById("btnIncassiMobile"),
+
+        badgeIncassiMobile:
+            document.getElementById("badgeIncassiMobile"),
+
         barraStato:
             document.getElementById("barraStato"),
 
@@ -255,5 +279,8 @@ function aggiornaDOMScheda() {
 
     DOM.scheda.btnChiudi =
         document.getElementById("btnChiudiScheda");
+
+    DOM.scheda.btnLinkSumup =
+        document.getElementById("btnLinkSumup");
 
 }

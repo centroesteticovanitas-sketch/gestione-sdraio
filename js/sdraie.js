@@ -320,6 +320,9 @@ function aggiornaIndicatoreIncassi() {
     DOM.header.badgeIncassi.textContent = daSaldare;
     DOM.header.badgeIncassi.classList.toggle("hidden", daSaldare === 0);
 
+    DOM.header.badgeIncassiMobile.textContent = daSaldare;
+    DOM.header.badgeIncassiMobile.classList.toggle("hidden", daSaldare === 0);
+
 }
 
 /* ============================================================
