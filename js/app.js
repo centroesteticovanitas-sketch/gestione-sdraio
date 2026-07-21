@@ -101,6 +101,25 @@ function collegaEventi() {
 
     DOM.header.btnManuale.addEventListener("click", apriManuale);
 
+    const esportaBackup = () => esportaBackupPrenotazioni();
+    const selezionaBackupDaRipristinare = () => {
+
+        if (!utenteFirebaseAmministratore()) return;
+
+        DOM.header.fileRipristinoBackup.click();
+
+    };
+
+    DOM.header.btnEsportaBackup.addEventListener("click", esportaBackup);
+    DOM.header.btnRipristinaBackup.addEventListener("click", selezionaBackupDaRipristinare);
+    DOM.header.fileRipristinoBackup.addEventListener("change", evento => {
+
+        const file = evento.target.files?.[0];
+        evento.target.value = "";
+        if (file) ripristinaBackupPrenotazioni(file);
+
+    });
+
     DOM.header.btnPrenotaMobile.addEventListener("click", () => {
 
         DOM.header.btnPrenota.click();
@@ -139,6 +158,20 @@ function collegaEventi() {
 
         nascondi(DOM.header.menuMobile);
         apriManuale();
+
+    });
+
+    DOM.header.btnEsportaBackupMobile.addEventListener("click", () => {
+
+        nascondi(DOM.header.menuMobile);
+        esportaBackup();
+
+    });
+
+    DOM.header.btnRipristinaBackupMobile.addEventListener("click", () => {
+
+        nascondi(DOM.header.menuMobile);
+        selezionaBackupDaRipristinare();
 
     });
 

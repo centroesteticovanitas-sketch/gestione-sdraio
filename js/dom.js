@@ -44,6 +44,15 @@ const DOM = {
         btnManuale:
             document.getElementById("btnManuale"),
 
+        btnEsportaBackup:
+            document.getElementById("btnEsportaBackup"),
+
+        btnRipristinaBackup:
+            document.getElementById("btnRipristinaBackup"),
+
+        fileRipristinoBackup:
+            document.getElementById("fileRipristinoBackup"),
+
         btnEsci:
             document.getElementById("btnEsci"),
 
@@ -61,6 +70,12 @@ const DOM = {
 
         btnManualeMobile:
             document.getElementById("btnManualeMobile"),
+
+        btnEsportaBackupMobile:
+            document.getElementById("btnEsportaBackupMobile"),
+
+        btnRipristinaBackupMobile:
+            document.getElementById("btnRipristinaBackupMobile"),
 
         btnEsciMobile:
             document.getElementById("btnEsciMobile"),

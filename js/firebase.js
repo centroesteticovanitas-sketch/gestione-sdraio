@@ -362,7 +362,7 @@ async function salvaArchivioFirebase(prenotazioni) {
     if (!utenteFirebaseAutenticato()) {
 
         avviso("Prenotazione non salvata: esegui prima l'accesso.");
-        return;
+        return false;
 
     }
 
@@ -383,6 +383,7 @@ async function salvaArchivioFirebase(prenotazioni) {
     try {
 
         await operazione;
+        return true;
 
     }
     catch (errore) {
@@ -390,6 +391,90 @@ async function salvaArchivioFirebase(prenotazioni) {
         console.error("Salvataggio Firebase non riuscito.", errore);
         avviso(`Dettaglio salvataggio Firebase: ${errore?.code || errore?.message || "errore sconosciuto"}`);
         avviso("Il salvataggio online non è riuscito.");
+
+        return false;
+
+    }
+
+}
+
+// Il file e leggibile, non contiene password e puo essere conservato
+// sul telefono, PC o cloud personale dell'amministratore.
+function esportaBackupPrenotazioni() {
+
+    if (!utenteFirebaseAmministratore()) return;
+
+    const backup = {
+        applicazione: "Gestione Sdraio Amurusu",
+        versione: 1,
+        esportatoIl: new Date().toISOString(),
+        prenotazioni: Stato.prenotazioni
+    };
+    const file = new Blob([JSON.stringify(backup, null, 2)], {
+        type: "application/json"
+    });
+    const url = URL.createObjectURL(file);
+    const collegamento = document.createElement("a");
+
+    collegamento.href = url;
+    collegamento.download = `backup-prenotazioni-amurusu-${oggiISO()}.json`;
+    document.body.appendChild(collegamento);
+    collegamento.click();
+    collegamento.remove();
+    URL.revokeObjectURL(url);
+
+    avviso(`Backup esportato: ${Stato.prenotazioni.length} prenotazioni.`);
+
+}
+
+async function ripristinaBackupPrenotazioni(file) {
+
+    if (!utenteFirebaseAmministratore()) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+
+        avviso("Il file di backup e troppo grande.");
+        return;
+
+    }
+
+    try {
+
+        const backup = JSON.parse(await file.text());
+        const dati = Array.isArray(backup?.prenotazioni) ? backup.prenotazioni : null;
+
+        if (!dati || !dati.every(prenotazione =>
+            prenotazione &&
+            typeof prenotazione.id === "string" &&
+            typeof prenotazione.data === "string" &&
+            Array.isArray(prenotazione.sdraie)
+        )) {
+
+            throw new Error("Formato non valido");
+
+        }
+
+        if (!confirm(
+            `Ripristinare ${dati.length} prenotazioni dal backup?\n\n` +
+            "Le prenotazioni presenti nel backup verranno aggiunte o aggiornate. " +
+            "Quelle create dopo il backup non verranno cancellate."
+        )) return;
+
+        const prenotazioniRipristinate = dati.map(datiPrenotazione =>
+            creaPrenotazione(datiPrenotazione)
+        );
+        const riuscito = await salvaArchivioFirebase(prenotazioniRipristinate);
+
+        if (!riuscito) return;
+
+        await caricaArchivioCentrale();
+        avviso(`Backup ripristinato: ${prenotazioniRipristinate.length} prenotazioni inviate all'archivio centrale.`);
+
+    }
+    catch (errore) {
+
+        console.error("Ripristino backup non riuscito.", errore);
+        avviso("Impossibile ripristinare il backup: scegli un file JSON esportato dall'app.");
 
     }
 
