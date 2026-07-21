@@ -10,7 +10,8 @@ firebase.initializeApp(FIREBASE_CONFIG);
 
 const autenticazioneFirebase = firebase.auth();
 const archivioFirebase = firebase.firestore();
-const funzioniFirebase = firebase.functions("europe-west1");
+// La versione compat richiede esplicitamente app Firebase e regione.
+const funzioniFirebase = firebase.functions(firebase.app(), "europe-west1");
 const URL_ARCHIVIO_PRENOTAZIONI =
     "https://archivioprenotazioni-55fdafzm6a-ew.a.run.app";
 
