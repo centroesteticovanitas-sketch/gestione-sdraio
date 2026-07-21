@@ -134,6 +134,8 @@ function avviaSincronizzazioneFirebase() {
 
     sincronizzazioneFirebaseAttiva = true;
     primoCaricamentoFirebase = true;
+    // La fonte unica Ã¨ Firestore: non manteniamo dati di browser precedenti.
+    Stato.prenotazioni = [];
 
     interrompiAscoltoPrenotazioni = archivioFirebase
         .collection("prenotazioni")

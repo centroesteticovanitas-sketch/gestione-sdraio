@@ -6,8 +6,6 @@
 
 "use strict";
 
-const CHIAVE_ARCHIVIO = "amurusu-prenotazioni-v1";
-
 function prenotazioniDelGiorno(data = DOM.header.data.value) {
 
     return Stato.prenotazioni.filter(p => p.data === data);
@@ -19,28 +17,15 @@ function salvaArchivio(prenotazioniDaSalvare = Stato.prenotazioni) {
     // Senza accesso non conserviamo né modifichiamo alcuna prenotazione.
     if (!utenteFirebaseAutenticato()) return;
 
-    // Copia di sicurezza durante l'avvio o in caso di rete momentaneamente assente.
-    localStorage.setItem(CHIAVE_ARCHIVIO, JSON.stringify(Stato.prenotazioni));
-
     salvaArchivioFirebase(prenotazioniDaSalvare);
 
 }
 
 function caricaPrenotazioni() {
 
-    try {
-
-        const archivio = JSON.parse(localStorage.getItem(CHIAVE_ARCHIVIO) || "[]");
-
-        Stato.prenotazioni = archivio.map(dati => creaPrenotazione(dati));
-
-    }
-    catch (errore) {
-
-        console.warn("Archivio prenotazioni non leggibile.", errore);
-        Stato.prenotazioni = [];
-
-    }
+    // L'archivio ufficiale Ã¨ Firebase: nessuna prenotazione viene caricata
+    // dalle copie locali dei singoli browser.
+    Stato.prenotazioni = [];
 
     ridisegnaSdraie();
 
@@ -85,12 +70,6 @@ function eliminaPrenotazione(prenotazione) {
     if (indice >= 0) {
 
         Stato.prenotazioni.splice(indice, 1);
-
-    }
-
-    if (utenteFirebaseAutenticato()) {
-
-        localStorage.setItem(CHIAVE_ARCHIVIO, JSON.stringify(Stato.prenotazioni));
 
     }
 
