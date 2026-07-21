@@ -11,6 +11,8 @@ firebase.initializeApp(FIREBASE_CONFIG);
 const autenticazioneFirebase = firebase.auth();
 const archivioFirebase = firebase.firestore();
 const funzioniFirebase = firebase.functions("europe-west1");
+const URL_ARCHIVIO_PRENOTAZIONI =
+    "https://europe-west1-gestione-sdraio.cloudfunctions.net/archivioPrenotazioni";
 
 let sincronizzazioneFirebaseAttiva = false;
 let interrompiAscoltoPrenotazioni = null;
@@ -78,6 +80,50 @@ function utenteFirebaseAmministratore() {
 function utenteFirebaseAutenticato() {
 
     return Boolean(autenticazioneFirebase.currentUser);
+
+}
+
+async function richiestaArchivio(operazione, dati = null) {
+
+    const token = await autenticazioneFirebase.currentUser?.getIdToken();
+
+    if (!token) throw new Error("Accesso non valido.");
+
+    const risposta = await fetch(URL_ARCHIVIO_PRENOTAZIONI, {
+        method: operazione === "leggi" ? "GET" : "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            ...(operazione === "leggi" ? {} : { "Content-Type": "application/json" })
+        },
+        body: operazione === "leggi" ? undefined : JSON.stringify({ operazione, ...dati })
+    });
+
+    const risultato = await risposta.json().catch(() => ({}));
+
+    if (!risposta.ok) throw new Error(risultato.errore || "Errore archivio centrale.");
+
+    return risultato;
+
+}
+
+async function caricaArchivioCentrale() {
+
+    try {
+
+        const risultato = await richiestaArchivio("leggi");
+        Stato.prenotazioni = (risultato.prenotazioni || []).map(dati => creaPrenotazione(dati));
+        allineaDataAllaProssimaPrenotazione();
+        ridisegnaSdraie();
+
+        if (gestioneIncassiAperta) aggiornaListaIncassi();
+
+    }
+    catch (errore) {
+
+        console.error("Lettura archivio centrale non riuscita.", errore);
+        avviso(`Impossibile leggere l'archivio centrale: ${errore.message}`);
+
+    }
 
 }
 
@@ -182,6 +228,9 @@ function avviaSincronizzazioneFirebase() {
     // La fonte unica Ã¨ Firestore: non manteniamo dati di browser precedenti.
     Stato.prenotazioni = [];
 
+    caricaArchivioCentrale();
+    return;
+
     interrompiAscoltoPrenotazioni = archivioFirebase
         .collection("prenotazioni")
         .onSnapshot(snapshot => {
@@ -276,13 +325,7 @@ async function salvaArchivioFirebase(prenotazioni) {
 
     }
 
-    const operazione = Promise.all(
-        prenotazioni.map(prenotazione =>
-            archivioFirebase.collection("prenotazioni")
-                .doc(prenotazione.id)
-                .set(JSON.parse(JSON.stringify(prenotazione)))
-        )
-    );
+    const operazione = richiestaArchivio("salva", { prenotazioni });
 
     // Il logout attende questa promessa: cosÃ¬ una prenotazione appena
     // confermata non puÃ² andare persa uscendo subito dall'app.
@@ -309,7 +352,7 @@ async function eliminaPrenotazioneFirebase(id) {
 
     try {
 
-        await archivioFirebase.collection("prenotazioni").doc(id).delete();
+        await richiestaArchivio("elimina", { id });
 
     }
     catch (errore) {
