@@ -16,6 +16,29 @@ let sincronizzazioneFirebaseAttiva = false;
 let interrompiAscoltoPrenotazioni = null;
 let primoCaricamentoFirebase = true;
 let ultimoSalvataggioFirebase = Promise.resolve();
+let dataAllineataAlPrimoCaricamento = false;
+
+function allineaDataAllaProssimaPrenotazione() {
+
+    if (dataAllineataAlPrimoCaricamento || !Stato.prenotazioni.length) return;
+
+    const oggi = oggiISO();
+    const future = Stato.prenotazioni
+        .filter(prenotazione => prenotazione.data >= oggi)
+        .sort((a, b) => a.data.localeCompare(b.data));
+    const daMostrare = future[0] || Stato.prenotazioni
+        .slice()
+        .sort((a, b) => b.data.localeCompare(a.data))[0];
+
+    if (daMostrare?.data && !prenotazioniDelGiorno().length) {
+
+        DOM.header.data.value = daMostrare.data;
+
+    }
+
+    dataAllineataAlPrimoCaricamento = true;
+
+}
 
 // Il link Esci attende l'ultimo salvataggio: evita che una prenotazione
 // appena creata venga interrotta passando subito alla pagina di logout.
@@ -155,6 +178,7 @@ function avviaSincronizzazioneFirebase() {
 
     sincronizzazioneFirebaseAttiva = true;
     primoCaricamentoFirebase = true;
+    dataAllineataAlPrimoCaricamento = false;
     // La fonte unica Ã¨ Firestore: non manteniamo dati di browser precedenti.
     Stato.prenotazioni = [];
 
@@ -196,6 +220,8 @@ function avviaSincronizzazioneFirebase() {
                 creaPrenotazione({ ...documento.data(), id: documento.id })
             );
 
+            allineaDataAllaProssimaPrenotazione();
+
             const coloriCorretti = normalizzaColoriPrenotazioni(Stato.prenotazioni);
 
             if (coloriCorretti && utenteFirebaseAmministratore()) {
@@ -224,6 +250,8 @@ function avviaSincronizzazioneFirebase() {
             Stato.prenotazioni = snapshot.docs.map(documento =>
                 creaPrenotazione({ ...documento.data(), id: documento.id })
             );
+
+            allineaDataAllaProssimaPrenotazione();
 
             ridisegnaSdraie();
 
