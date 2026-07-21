@@ -620,7 +620,22 @@ async function salvaSceltaNuovaPrenotazione() {
     aggiungiPrenotazione(prenotazione);
 
     DOM.mappa.scheda.innerHTML = "Salvataggio della prenotazione online in corso...";
-    await ultimoSalvataggioFirebase;
+    const salvataggioCompletato = await Promise.race([
+        ultimoSalvataggioFirebase.then(() => true),
+        new Promise(resolve => setTimeout(() => resolve(false), 16000))
+    ]);
+
+    if (!salvataggioCompletato) {
+
+        const indice = Stato.prenotazioni.indexOf(prenotazione);
+        if (indice >= 0) Stato.prenotazioni.splice(indice, 1);
+        ridisegnaSdraie();
+        DOM.mappa.scheda.innerHTML = "Errore: il browser non riceve risposta dal servizio di salvataggio.";
+        avviso("Il salvataggio online non ha ricevuto risposta. La prenotazione non e stata confermata.");
+
+        return;
+
+    }
 
     Stato.sdraieSelezionate = [];
     Stato.numeroSdraieRichiesto = 0;
