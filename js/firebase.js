@@ -252,8 +252,9 @@ function avviaSincronizzazioneFirebase() {
     // La fonte unica Ã¨ Firestore: non manteniamo dati di browser precedenti.
     Stato.prenotazioni = [];
 
-    caricaArchivioCentrale();
-    return;
+    // Firestore e' il database centrale dell'app. Usiamo direttamente il suo
+    // ascolto in tempo reale, cosi' tutti i telefoni ricevono subito gli
+    // stessi dati senza dover passare da un servizio intermedio.
 
     interrompiAscoltoPrenotazioni = archivioFirebase
         .collection("prenotazioni")
@@ -349,7 +350,40 @@ async function salvaArchivioFirebase(prenotazioni) {
 
     }
 
-    const operazione = richiestaArchivio("salva", { prenotazioni });
+    const operazione = (async () => {
+
+        const archivioOnline = await archivioFirebase
+            .collection("prenotazioni")
+            .get({ source: "server" });
+        const batch = archivioFirebase.batch();
+        const idDaConservare = new Set(prenotazioni.map(prenotazione => prenotazione.id));
+
+        prenotazioni.forEach(prenotazione => {
+
+            const { id, ...dati } = prenotazione;
+
+            batch.set(
+                archivioFirebase.collection("prenotazioni").doc(id),
+                dati
+            );
+
+        });
+
+        // Solo l'amministratore puo' rimuovere documenti: i collaboratori
+        // aggiornano esclusivamente i dati di pagamento gia' esistenti.
+        if (utenteFirebaseAmministratore()) {
+
+            archivioOnline.docs.forEach(documento => {
+
+                if (!idDaConservare.has(documento.id)) batch.delete(documento.ref);
+
+            });
+
+        }
+
+        await batch.commit();
+
+    })();
 
     // Il logout attende questa promessa: cosÃ¬ una prenotazione appena
     // confermata non puÃ² andare persa uscendo subito dall'app.
