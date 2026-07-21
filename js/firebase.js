@@ -85,22 +85,44 @@ function utenteFirebaseAutenticato() {
 
 async function richiestaArchivio(operazione, dati = null) {
 
-    const token = await autenticazioneFirebase.currentUser?.getIdToken();
+    const mostraStato = testo => {
+
+        if (Stato.modalita === Modalita.NUOVA_PRENOTAZIONE) {
+
+            DOM.mappa.scheda.textContent = testo;
+
+        }
+
+    };
+
+    mostraStato("Verifica accesso Firebase...");
+
+    const token = await Promise.race([
+        autenticazioneFirebase.currentUser?.getIdToken(),
+        new Promise((_, rifiuta) => setTimeout(() => rifiuta(new Error("Timeout accesso Firebase.")), 12000))
+    ]);
 
     if (!token) throw new Error("Accesso non valido.");
 
-    const risposta = await fetch(URL_ARCHIVIO_PRENOTAZIONI, {
-        method: operazione === "leggi" ? "GET" : "POST",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            ...(operazione === "leggi" ? {} : { "Content-Type": "application/json" })
-        },
-        body: operazione === "leggi" ? undefined : JSON.stringify({ operazione, ...dati })
-    });
+    mostraStato("Invio prenotazione al server centrale...");
+
+    const risposta = await Promise.race([
+        fetch(URL_ARCHIVIO_PRENOTAZIONI, {
+            method: operazione === "leggi" ? "GET" : "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                ...(operazione === "leggi" ? {} : { "Content-Type": "application/json" })
+            },
+            body: operazione === "leggi" ? undefined : JSON.stringify({ operazione, ...dati })
+        }),
+        new Promise((_, rifiuta) => setTimeout(() => rifiuta(new Error("Timeout server centrale.")), 20000))
+    ]);
 
     const risultato = await risposta.json().catch(() => ({}));
 
     if (!risposta.ok) throw new Error(risultato.errore || "Errore archivio centrale.");
+
+    mostraStato("Prenotazione salvata sul server centrale.");
 
     return risultato;
 
