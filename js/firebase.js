@@ -106,14 +106,16 @@ async function richiestaArchivio(operazione, dati = null) {
 
     mostraStato("Invio prenotazione al server centrale...");
 
+    const corpo = new URLSearchParams({
+        token,
+        dati: JSON.stringify({ operazione, ...(dati || {}) })
+    });
+
     const risposta = await Promise.race([
         fetch(URL_ARCHIVIO_PRENOTAZIONI, {
-            method: operazione === "leggi" ? "GET" : "POST",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                ...(operazione === "leggi" ? {} : { "Content-Type": "application/json" })
-            },
-            body: operazione === "leggi" ? undefined : JSON.stringify({ operazione, ...dati })
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: corpo
         }),
         new Promise((_, rifiuta) => setTimeout(() => rifiuta(new Error("Timeout server centrale.")), 20000))
     ]);
