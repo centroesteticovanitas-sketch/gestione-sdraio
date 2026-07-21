@@ -12,7 +12,7 @@ const autenticazioneFirebase = firebase.auth();
 const archivioFirebase = firebase.firestore();
 const funzioniFirebase = firebase.functions("europe-west1");
 const URL_ARCHIVIO_PRENOTAZIONI =
-    "https://europe-west1-gestione-sdraio.cloudfunctions.net/archivioPrenotazioni";
+    "https://archivioprenotazioni-55fdafzm6a-ew.a.run.app";
 
 let sincronizzazioneFirebaseAttiva = false;
 let interrompiAscoltoPrenotazioni = null;
@@ -250,6 +250,9 @@ function avviaSincronizzazioneFirebase() {
     // La fonte unica Ã¨ Firestore: non manteniamo dati di browser precedenti.
     Stato.prenotazioni = [];
 
+    caricaArchivioCentrale();
+    return;
+
     interrompiAscoltoPrenotazioni = archivioFirebase
         .collection("prenotazioni")
         .onSnapshot(snapshot => {
@@ -344,13 +347,7 @@ async function salvaArchivioFirebase(prenotazioni) {
 
     }
 
-    const operazione = Promise.all(
-        prenotazioni.map(prenotazione =>
-            archivioFirebase.collection("prenotazioni")
-                .doc(prenotazione.id)
-                .set(JSON.parse(JSON.stringify(prenotazione)))
-        )
-    );
+    const operazione = richiestaArchivio("salva", { prenotazioni });
 
     // Il logout attende questa promessa: cosÃ¬ una prenotazione appena
     // confermata non puÃ² andare persa uscendo subito dall'app.
@@ -377,7 +374,7 @@ async function eliminaPrenotazioneFirebase(id) {
 
     try {
 
-        await archivioFirebase.collection("prenotazioni").doc(id).delete();
+        await richiestaArchivio("elimina", { id });
 
     }
     catch (errore) {
