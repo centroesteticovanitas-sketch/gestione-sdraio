@@ -215,6 +215,28 @@ function avviaSincronizzazioneFirebase() {
 
         });
 
+    // Il primo caricamento deve arrivare dal server centrale e non dalla
+    // cache del singolo telefono/browser.
+    archivioFirebase.collection("prenotazioni")
+        .get({ source: "server" })
+        .then(snapshot => {
+
+            Stato.prenotazioni = snapshot.docs.map(documento =>
+                creaPrenotazione({ ...documento.data(), id: documento.id })
+            );
+
+            ridisegnaSdraie();
+
+            if (gestioneIncassiAperta) aggiornaListaIncassi();
+
+        })
+        .catch(errore => {
+
+            console.error("Lettura diretta Firebase non riuscita.", errore);
+            avviso(`Impossibile leggere le prenotazioni online: ${errore?.code || "errore sconosciuto"}`);
+
+        });
+
 }
 
 async function salvaArchivioFirebase(prenotazioni) {
