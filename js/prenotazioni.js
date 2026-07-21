@@ -478,6 +478,10 @@ function selezionaSdraia(id) {
 
     if (Stato.sdraieSelezionate.length === numeroRichiesto) {
 
+        // La scelta Ã¨ completa: riattiviamo la fascia per consentire il
+        // tocco esplicito del pulsante Salva prenotazione.
+        DOM.mappa.scheda.classList.remove("selezione-attiva");
+
         DOM.mappa.scheda.innerHTML =
             `Sdraie selezionate: ${numeroRichiesto} di ${numeroRichiesto}. ` +
             `<button id="btnSalvaScelta" type="button" onclick="salvaSceltaNuovaPrenotazione()">Salva prenotazione</button>`;
