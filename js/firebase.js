@@ -250,9 +250,6 @@ function avviaSincronizzazioneFirebase() {
     // La fonte unica Ã¨ Firestore: non manteniamo dati di browser precedenti.
     Stato.prenotazioni = [];
 
-    caricaArchivioCentrale();
-    return;
-
     interrompiAscoltoPrenotazioni = archivioFirebase
         .collection("prenotazioni")
         .onSnapshot(snapshot => {
@@ -347,7 +344,13 @@ async function salvaArchivioFirebase(prenotazioni) {
 
     }
 
-    const operazione = richiestaArchivio("salva", { prenotazioni });
+    const operazione = Promise.all(
+        prenotazioni.map(prenotazione =>
+            archivioFirebase.collection("prenotazioni")
+                .doc(prenotazione.id)
+                .set(JSON.parse(JSON.stringify(prenotazione)))
+        )
+    );
 
     // Il logout attende questa promessa: cosÃ¬ una prenotazione appena
     // confermata non puÃ² andare persa uscendo subito dall'app.
@@ -374,7 +377,7 @@ async function eliminaPrenotazioneFirebase(id) {
 
     try {
 
-        await richiestaArchivio("elimina", { id });
+        await archivioFirebase.collection("prenotazioni").doc(id).delete();
 
     }
     catch (errore) {
