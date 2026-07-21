@@ -17,6 +17,27 @@ let interrompiAscoltoPrenotazioni = null;
 let primoCaricamentoFirebase = true;
 let ultimoSalvataggioFirebase = Promise.resolve();
 
+// Il link Esci attende l'ultimo salvataggio: evita che una prenotazione
+// appena creata venga interrotta passando subito alla pagina di logout.
+window.esciDopoSalvataggio = evento => {
+
+    evento.preventDefault();
+
+    const destinazione = evento.currentTarget.href;
+
+    Promise.race([
+        ultimoSalvataggioFirebase,
+        new Promise(resolve => setTimeout(resolve, 8000))
+    ]).finally(() => {
+
+        window.location.href = destinazione;
+
+    });
+
+    return false;
+
+};
+
 function ruoloFirebaseCorrente() {
 
     const email = autenticazioneFirebase.currentUser?.email?.toLowerCase();
