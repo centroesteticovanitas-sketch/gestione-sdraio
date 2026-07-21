@@ -479,19 +479,8 @@ function selezionaSdraia(id) {
     if (Stato.sdraieSelezionate.length === numeroRichiesto) {
 
         DOM.mappa.scheda.innerHTML =
-            `Sdraie selezionate: ${numeroRichiesto} di ${numeroRichiesto}.`;
-
-        if (Stato.salvataggioSelezioneInCorso) return;
-
-        Stato.salvataggioSelezioneInCorso = true;
-
-        setTimeout(() => {
-
-            Stato.salvataggioSelezioneInCorso = false;
-            salvaSceltaNuovaPrenotazione();
-
-        // Lascia visibile il conteggio finale prima del salvataggio automatico.
-        }, 700);
+            `Sdraie selezionate: ${numeroRichiesto} di ${numeroRichiesto}. ` +
+            `<button id="btnSalvaScelta" type="button" onclick="salvaSceltaNuovaPrenotazione()">Salva prenotazione</button>`;
 
         return;
 
@@ -597,7 +586,7 @@ function caricaPrenotazioneNelModal(prenotazione) {
 
 }
 
-function salvaSceltaNuovaPrenotazione() {
+async function salvaSceltaNuovaPrenotazione() {
 
     const numeroRichiesto = Stato.numeroSdraieRichiesto;
 
@@ -624,6 +613,11 @@ function salvaSceltaNuovaPrenotazione() {
 
     assegnaSdraie(prenotazione, Stato.sdraieSelezionate);
 
+    aggiungiPrenotazione(prenotazione);
+
+    DOM.mappa.scheda.innerHTML = "Salvataggio della prenotazione online in corso...";
+    await ultimoSalvataggioFirebase;
+
     Stato.sdraieSelezionate = [];
     Stato.numeroSdraieRichiesto = 0;
     Stato.salvataggioSelezioneInCorso = false;
@@ -632,7 +626,6 @@ function salvaSceltaNuovaPrenotazione() {
 
     DOM.header.btnPrenota.textContent = "➕ Prenotazione";
 
-    aggiungiPrenotazione(prenotazione);
     rimuoviEvidenziazione();
     DOM.mappa.scheda.classList.remove("selezione-attiva");
     chiudiScheda();
@@ -663,7 +656,7 @@ function iniziaSceltaSdraie() {
     DOM.header.data.value = DOM.form.data.value;
     DOM.header.btnPrenota.textContent = "Annulla selezione";
     DOM.mappa.scheda.innerHTML =
-        `Seleziona ${DOM.form.numero.value} sdraie sulla planimetria: la prenotazione verrà salvata automaticamente.`;
+        `Seleziona ${DOM.form.numero.value} sdraie sulla planimetria, poi usa Salva prenotazione.`;
 
     DOM.mappa.scheda.innerHTML =
         `Sdraie selezionate: 0 di ${DOM.form.numero.value}.`;
