@@ -352,11 +352,7 @@ async function salvaArchivioFirebase(prenotazioni) {
 
     const operazione = (async () => {
 
-        const archivioOnline = await archivioFirebase
-            .collection("prenotazioni")
-            .get({ source: "server" });
         const batch = archivioFirebase.batch();
-        const idDaConservare = new Set(prenotazioni.map(prenotazione => prenotazione.id));
 
         prenotazioni.forEach(prenotazione => {
 
@@ -369,19 +365,13 @@ async function salvaArchivioFirebase(prenotazioni) {
 
         });
 
-        // Solo l'amministratore puo' rimuovere documenti: i collaboratori
-        // aggiornano esclusivamente i dati di pagamento gia' esistenti.
-        if (utenteFirebaseAmministratore()) {
-
-            archivioOnline.docs.forEach(documento => {
-
-                if (!idDaConservare.has(documento.id)) batch.delete(documento.ref);
-
-            });
-
-        }
-
-        await batch.commit();
+        await Promise.race([
+            batch.commit(),
+            new Promise((_, rifiuta) => setTimeout(
+                () => rifiuta(new Error("Timeout salvataggio Firebase.")),
+                15000
+            ))
+        ]);
 
     })();
 
@@ -410,7 +400,7 @@ async function eliminaPrenotazioneFirebase(id) {
 
     try {
 
-        await richiestaArchivio("elimina", { id });
+        await archivioFirebase.collection("prenotazioni").doc(id).delete();
 
     }
     catch (errore) {
