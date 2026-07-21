@@ -19,6 +19,7 @@ let interrompiAscoltoPrenotazioni = null;
 let primoCaricamentoFirebase = true;
 let ultimoSalvataggioFirebase = Promise.resolve();
 let dataAllineataAlPrimoCaricamento = false;
+let timerAggiornamentoArchivio = null;
 
 function allineaDataAllaProssimaPrenotazione() {
 
@@ -134,7 +135,15 @@ async function caricaArchivioCentrale() {
 
     try {
 
-        const risultato = await richiestaArchivio("leggi");
+        const chiamata = funzioniFirebase.httpsCallable("leggiPrenotazioni");
+        const risposta = await Promise.race([
+            chiamata(),
+            new Promise((_, rifiuta) => setTimeout(
+                () => rifiuta(new Error("Timeout lettura prenotazioni.")),
+                15000
+            ))
+        ]);
+        const risultato = risposta.data || {};
         Stato.prenotazioni = (risultato.prenotazioni || []).map(dati => creaPrenotazione(dati));
         allineaDataAllaProssimaPrenotazione();
         ridisegnaSdraie();
@@ -252,9 +261,12 @@ function avviaSincronizzazioneFirebase() {
     // La fonte unica Ã¨ Firestore: non manteniamo dati di browser precedenti.
     Stato.prenotazioni = [];
 
-    // Firestore e' il database centrale dell'app. Usiamo direttamente il suo
-    // ascolto in tempo reale, cosi' tutti i telefoni ricevono subito gli
-    // stessi dati senza dover passare da un servizio intermedio.
+    // Le funzioni callable gestiscono in modo affidabile accesso, CORS e
+    // lettura dell'archivio centrale da ogni telefono.
+    caricaArchivioCentrale();
+    if (timerAggiornamentoArchivio) clearInterval(timerAggiornamentoArchivio);
+    timerAggiornamentoArchivio = setInterval(caricaArchivioCentrale, 10000);
+    return;
 
     interrompiAscoltoPrenotazioni = archivioFirebase
         .collection("prenotazioni")
@@ -350,30 +362,13 @@ async function salvaArchivioFirebase(prenotazioni) {
 
     }
 
-    const operazione = (async () => {
-
-        const batch = archivioFirebase.batch();
-
-        prenotazioni.forEach(prenotazione => {
-
-            const { id, ...dati } = prenotazione;
-
-            batch.set(
-                archivioFirebase.collection("prenotazioni").doc(id),
-                dati
-            );
-
-        });
-
-        await Promise.race([
-            batch.commit(),
+    const operazione = Promise.race([
+        funzioniFirebase.httpsCallable("salvaPrenotazioni")({ prenotazioni }),
             new Promise((_, rifiuta) => setTimeout(
                 () => rifiuta(new Error("Timeout salvataggio Firebase.")),
                 15000
             ))
-        ]);
-
-    })();
+    ]);
 
     // Il logout attende questa promessa: cosÃ¬ una prenotazione appena
     // confermata non puÃ² andare persa uscendo subito dall'app.
@@ -400,7 +395,7 @@ async function eliminaPrenotazioneFirebase(id) {
 
     try {
 
-        await archivioFirebase.collection("prenotazioni").doc(id).delete();
+        await funzioniFirebase.httpsCallable("eliminaPrenotazione")({ id });
 
     }
     catch (errore) {
