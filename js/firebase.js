@@ -219,7 +219,12 @@ function avviaSincronizzazioneFirebase() {
 
 async function salvaArchivioFirebase(prenotazioni) {
 
-    if (!utenteFirebaseAutenticato()) return;
+    if (!utenteFirebaseAutenticato()) {
+
+        avviso("Prenotazione non salvata: esegui prima l'accesso.");
+        return;
+
+    }
 
     const operazione = Promise.all(
         prenotazioni.map(prenotazione =>
@@ -241,6 +246,7 @@ async function salvaArchivioFirebase(prenotazioni) {
     catch (errore) {
 
         console.error("Salvataggio Firebase non riuscito.", errore);
+        avviso(`Dettaglio salvataggio Firebase: ${errore?.code || errore?.message || "errore sconosciuto"}`);
         avviso("Il salvataggio online non è riuscito.");
 
     }
