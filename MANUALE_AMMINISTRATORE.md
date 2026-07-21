@@ -105,13 +105,35 @@ Apri **Statistiche** e seleziona il periodo desiderato:
 
 Sono visibili prenotazioni, incassi, importi SumUp, contanti e riepiloghi utili. In fondo è disponibile anche l'elenco delle prenotazioni dei prossimi dieci giorni, ordinato per data.
 
-## 9. Ruoli nell'app
+## 9. Backup e ripristino
+
+Il backup è disponibile solo all'amministratore e salva le prenotazioni in un file sicuro sul dispositivo. Il file non contiene password o credenziali.
+
+### Creare un backup
+
+1. Accedi come amministratore.
+2. Dal menu premi **Esporta backup**.
+3. Il telefono o il PC scarica un file chiamato `backup-prenotazioni-amurusu-AAAA-MM-GG.json`.
+4. Conservalo in un luogo sicuro: ad esempio Google Drive, iCloud Drive o una cartella del PC.
+
+Consiglio: crea un backup ogni sera in cui vengono inserite prenotazioni, oppure almeno una volta alla settimana.
+
+### Ripristinare un backup
+
+1. Accedi come amministratore.
+2. Dal menu premi **Ripristina backup** e scegli il file `.json` esportato in precedenza.
+3. Leggi il messaggio di conferma e premi **OK**.
+4. Attendi il messaggio di conferma, quindi aggiorna la pagina se necessario.
+
+Il ripristino aggiunge o aggiorna le prenotazioni contenute nel file, ma non cancella quelle create dopo il backup. In questo modo non rischi di perdere prenotazioni recenti.
+
+## 10. Ruoli nell'app
 
 L'amministratore può creare, modificare ed eliminare prenotazioni, configurare tariffe, vedere statistiche e registrare pagamenti.
 
 I collaboratori possono consultare le prenotazioni e registrare i pagamenti, ma non devono modificare la disposizione delle sdraie, le tariffe o cancellare prenotazioni.
 
-## 10. Buone pratiche e risoluzione rapida dei problemi
+## 11. Buone pratiche e risoluzione rapida dei problemi
 
 - Usa sempre la versione pubblicata su GitHub Pages per il lavoro quotidiano: Live Server sul PC è utile solo per le prove.
 - Dopo un salvataggio, attendi qualche secondo prima di aggiornare la pagina, chiudere il browser o uscire dall'app.
@@ -120,7 +142,7 @@ I collaboratori possono consultare le prenotazioni e registrare i pagamenti, ma 
 - Se cambi file su GitHub, attendi circa un minuto e poi aggiorna la pagina; se vedi ancora la versione precedente, chiudi e riapri la pagina.
 - Non condividere la password dell'amministratore. Per i collaboratori usa l'accesso dedicato.
 
-## 11. Procedura veloce per una giornata tipo
+## 12. Procedura veloce per una giornata tipo
 
 1. Accedi come amministratore.
 2. Controlla data e sdraie disponibili.
