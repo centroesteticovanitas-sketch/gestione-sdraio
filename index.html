@@ -112,7 +112,7 @@
 
         </button>
 
-        <a id="btnEsci" class="link-esci" href="logout.html">
+        <a id="btnEsci" class="link-esci" href="logout.html" onclick="return esciDopoSalvataggio(event)">
 
             Esci
 
@@ -128,7 +128,7 @@
     <button id="btnStatisticheMobile" type="button">📊 Statistiche</button>
     <button id="btnTariffeMobile" type="button">⚙️ Tariffe</button>
     <button id="btnManualeMobile" type="button">Manuale</button>
-    <a id="btnEsciMobile" class="link-esci" href="logout.html">Esci</a>
+    <a id="btnEsciMobile" class="link-esci" href="logout.html" onclick="return esciDopoSalvataggio(event)">Esci</a>
 </div>
 
 <main>
@@ -624,7 +624,7 @@
 
 <script src="js/firebase-config.js"></script>
 
-<script src="js/firebase.js?v=20260721-1"></script>
+<script src="js/firebase.js?v=20260721-2"></script>
 
 <script src="js/stato.js"></script>
 
