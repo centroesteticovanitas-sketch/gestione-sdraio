@@ -137,7 +137,9 @@ async function caricaArchivioCentrale() {
 
         const chiamata = funzioniFirebase.httpsCallable("leggiPrenotazioni");
         const risposta = await Promise.race([
-            chiamata(),
+            // Promise.resolve rende visibile anche un errore immediato del
+            // browser/Firebase, invece di lasciarlo nascosto nell'interfaccia.
+            Promise.resolve().then(() => chiamata()),
             new Promise((_, rifiuta) => setTimeout(
                 () => rifiuta(new Error("Timeout lettura prenotazioni.")),
                 15000
@@ -363,7 +365,9 @@ async function salvaArchivioFirebase(prenotazioni) {
     }
 
     const operazione = Promise.race([
-        funzioniFirebase.httpsCallable("salvaPrenotazioni")({ prenotazioni }),
+        Promise.resolve().then(() =>
+            funzioniFirebase.httpsCallable("salvaPrenotazioni")({ prenotazioni })
+        ),
             new Promise((_, rifiuta) => setTimeout(
                 () => rifiuta(new Error("Timeout salvataggio Firebase.")),
                 15000
@@ -395,7 +399,9 @@ async function eliminaPrenotazioneFirebase(id) {
 
     try {
 
-        await funzioniFirebase.httpsCallable("eliminaPrenotazione")({ id });
+        await Promise.resolve().then(() =>
+            funzioniFirebase.httpsCallable("eliminaPrenotazione")({ id })
+        );
 
     }
     catch (errore) {
